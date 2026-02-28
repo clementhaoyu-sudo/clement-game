@@ -1,0 +1,7 @@
+# macOS
+.DS_Store
+
+# 本地或临时文件（保留 audio 里的 mp3，部署需要）
+*.log
+.env
+.env.local

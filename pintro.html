@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLEMENT GAME SAISON 1</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="pintro.css">
+</head>
+<body class="pintro-page">
+  <div class="settings-wrap">
+    <button type="button" class="settings-btn" id="settingsBtn" aria-label="Settings" data-i18n="settings">Paramètres</button>
+    <div class="settings-dropdown" id="settingsDropdown">
+      <div class="settings-option">
+        <span class="settings-label" data-i18n="language">Langue</span>
+        <select id="langSelect" aria-label="Language">
+          <option value="fr" data-i18n="lang_fr">Français</option>
+          <option value="en" data-i18n="lang_en">English</option>
+          <option value="es" data-i18n="lang_es">Español</option>
+          <option value="zh" data-i18n="lang_zh">中文</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="pintro-title" id="homeTitle">CLEMENT GAME SAISON 1</h1>
+
+  <div class="pintro-box">
+    <h2 class="pintro-warning-title" data-i18n="modal_warning_title">Attention</h2>
+    <p class="pintro-warning-text" data-i18n="modal_warning_text">Si vous perdez une épreuve, vous devrez recommencer le jeu depuis le début.</p>
+    <a href="index.html" class="pintro-btn" id="pintroBtn" data-i18n="modal_btn_start">Commencer</a>
+  </div>
+
+  <script src="lang.js"></script>
+  <script>
+    (function() {
+      var btn = document.getElementById('settingsBtn');
+      var dropdown = document.getElementById('settingsDropdown');
+      var langSelect = document.getElementById('langSelect');
+      var pintroBtn = document.getElementById('pintroBtn');
+
+      if (pintroBtn) {
+        pintroBtn.addEventListener('click', function(e) {
+          sessionStorage.setItem('clement-from-pintro', '1');
+          try {
+            localStorage.setItem('clement-game-completed', '0');
+            localStorage.setItem('clement-starcoin', '0');
+            localStorage.removeItem('clement-bonus-used');
+          } catch (err) {}
+        });
+      }
+
+      if (btn && dropdown) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          dropdown.classList.toggle('open');
+        });
+      }
+      document.addEventListener('click', function() {
+        if (dropdown) dropdown.classList.remove('open');
+      });
+      if (dropdown) dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+
+      if (langSelect) {
+        langSelect.addEventListener('change', function() {
+          window.setLang(this.value);
+        });
+      }
+
+      var saved = localStorage.getItem('clement-game-lang') || 'fr';
+      if (langSelect) langSelect.value = saved;
+      window.setLang(saved);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+.pintro-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.pintro-title {
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.pintro-box {
+  max-width: 480px;
+  width: 100%;
+  padding: 2rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  text-align: center;
+}
+
+.pintro-warning-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #ffb400;
+}
+
+.pintro-warning-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.95;
+  margin-bottom: 1.5rem;
+}
+
+.pintro-btn {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #4361ee, #3a56d4);
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(67, 97, 238, 0.4);
+  transition: transform 0.12s ease;
+}
+
+.pintro-btn:hover {
+  transform: scale(1.03);
+}

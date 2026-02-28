@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeux de chance et stratégie - CLEMENT GAME SAISON 1</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="j3.css">
+</head>
+<body>
+  <!-- Modale des consignes -->
+  <div class="j3-rules-modal" id="j3RulesModal">
+    <div class="j3-rules-box">
+      <h2 class="j3-rules-title" id="j3RulesTitle">Règles du jeu</h2>
+      <p class="j3-rules-text" id="j3RulesText"></p>
+      <button type="button" class="j3-btn-start" id="j3RulesBtn">Démarrer</button>
+    </div>
+  </div>
+
+  <!-- Modale confirmation achat bonhomme test -->
+  <div class="j3-rules-modal j3-confirm-buy-modal hidden" id="j3ConfirmBuyModal">
+    <div class="j3-rules-box">
+      <h2 class="j3-rules-title" id="j3ConfirmBuyTitle">Confirmer l'achat</h2>
+      <p class="j3-rules-text" id="j3ConfirmBuyText">Un bonhomme test coûte 10 000 ⭐. Il révélera la case sûre d'une rangée. Confirmer ?</p>
+      <div class="j3-confirm-buttons">
+        <button type="button" class="j3-btn-cancel" id="j3ConfirmBuyCancel">Annuler</button>
+        <button type="button" class="j3-btn-confirm" id="j3ConfirmBuyConfirm">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modale bonhomme test tombé sur une piège -->
+  <div class="j3-rules-modal hidden" id="j3DummyTrapModal">
+    <div class="j3-rules-box">
+      <h2 class="j3-rules-title" id="j3DummyTrapTitle">Bonhomme test</h2>
+      <p class="j3-rules-text" id="j3DummyTrapText">Le bonhomme test est tombé sur une case piégée. Il n'est plus utilisable. Il faudra en acheter un autre.</p>
+      <button type="button" class="j3-btn-start" id="j3DummyTrapBtn">OK</button>
+    </div>
+  </div>
+
+  <!-- Modale passer l'épreuve (code 1428) -->
+  <div class="j3-skip-modal hidden" id="j3SkipModal">
+    <div class="j3-rules-box">
+      <h2 class="j3-rules-title" id="j3SkipModalTitle">Passer l'épreuve</h2>
+      <input type="password" class="j3-skip-input" id="j3SkipInput" placeholder="Code" autocomplete="off">
+      <p class="j3-skip-error" id="j3SkipError"></p>
+      <button type="button" class="j3-btn-start" id="j3SkipSubmit">Valider</button>
+    </div>
+  </div>
+
+  <button type="button" class="j3-skip-link" id="j3SkipLink">Passer l'épreuve</button>
+
+  <div class="j3-starcoin-badge" id="j3StarcoinBadge">⭐ 0</div>
+
+  <h1>CLEMENT GAME SAISON 1</h1>
+  <p class="j3-subtitle" id="j3Subtitle">Jeux de chance et stratégie</p>
+
+  <p class="j3-row-label" id="j3RowLabel">Rangée 1 / 7</p>
+
+  <div class="j3-bridge" id="j3Bridge">
+    <div class="j3-row" id="j3RowCurrent">
+      <button type="button" class="j3-tile j3-tile-left" id="j3TileLeft" data-col="0">Gauche</button>
+      <button type="button" class="j3-tile j3-tile-right" id="j3TileRight" data-col="1">Droite</button>
+    </div>
+  </div>
+
+  <div class="j3-dummy-actions">
+    <button type="button" class="j3-btn-dummy j3-btn-buy" id="j3BtnBuyDummy" disabled>Bonhomme test (10 000 ⭐)</button>
+    <button type="button" class="j3-btn-dummy j3-btn-use hidden" id="j3BtnUseDummy">Utiliser le bonhomme test</button>
+  </div>
+  <p class="j3-dummy-count" id="j3DummyCount"></p>
+
+  <div class="j3-result-overlay" id="j3ResultOverlay">
+    <div class="j3-result-box" id="j3ResultBox">
+      <h2 id="j3ResultTitle"></h2>
+      <p class="j3-result-explain" id="j3ResultExplain"></p>
+      <a href="index.html" class="j3-btn-back" id="j3BtnBack">Retour à l'accueil</a>
+      <a href="pintro.html" class="j3-btn-back j3-btn-restart" id="j3BtnRestart" style="display:none;">Recommencer</a>
+    </div>
+  </div>
+
+  <script src="lang.js"></script>
+  <script src="j3.js"></script>
+</body>
+</html>

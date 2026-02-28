@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mémoire des couleurs - CLEMENT GAME SAISON 1</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Modale des règles du jeu (apparaît à l'entrée sur j1) -->
+  <div class="j1-rules-modal" id="j1RulesModal">
+    <div class="j1-rules-box">
+      <h2 class="j1-rules-title" id="j1RulesTitle" data-i18n="j1_rules_title">Règles du jeu</h2>
+      <p class="j1-rules-text" id="j1RulesText" data-i18n="j1_rules_text">L'ordinateur affiche une séquence de blocs colorés (rouge, jaune, vert, bleu). Mémorise-la puis reproduis-la en cliquant sur les couleurs dans le bon ordre. Deux épreuves : d'abord 5 blocs, puis 9. Tu as un temps limité. Si tu te trompes ou que le temps est écoulé, tu perds.</p>
+      <button type="button" class="btn-start" id="j1RulesBtn" data-i18n="j1_btn_start">Démarrer</button>
+    </div>
+  </div>
+
+  <a href="index.html" class="back-home" id="backHome" aria-label="Retour accueil">←</a>
+  <button type="button" class="music-toggle" id="musicToggle" title="Musique on/off" aria-label="Musique">🔊</button>
+
+  <h1>CLEMENT GAME SAISON 1</h1>
+  <p class="subtitle" id="subtitle" data-i18n="j1_subtitle">Mémorise la séquence puis reproduis-la</p>
+
+  <div class="epreuve-badge" id="epreuveBadge">Épreuve 1</div>
+  <div class="timer-box" id="timer" aria-hidden="true">30</div>
+
+  <div class="sequence-area blocks-5" id="sequenceArea" aria-label="Séquence à mémoriser">
+    <div class="block hidden" data-index="0"></div>
+    <div class="block hidden" data-index="1"></div>
+    <div class="block hidden" data-index="2"></div>
+    <div class="block hidden" data-index="3"></div>
+    <div class="block hidden" data-index="4"></div>
+    <div class="block hidden" data-index="5"></div>
+    <div class="block hidden" data-index="6"></div>
+    <div class="block hidden" data-index="7"></div>
+    <div class="block hidden" data-index="8"></div>
+  </div>
+
+  <div class="player-selection-area blocks-5" id="playerSelectionArea" aria-label="Ta sélection">
+    <div class="block hidden" data-slot="0"></div>
+    <div class="block hidden" data-slot="1"></div>
+    <div class="block hidden" data-slot="2"></div>
+    <div class="block hidden" data-slot="3"></div>
+    <div class="block hidden" data-slot="4"></div>
+    <div class="block hidden" data-slot="5"></div>
+    <div class="block hidden" data-slot="6"></div>
+    <div class="block hidden" data-slot="7"></div>
+    <div class="block hidden" data-slot="8"></div>
+  </div>
+
+  <div class="player-area">
+    <p id="playerHint" data-i18n="j1_hint_click_start">Clique sur « Démarrer » pour voir la séquence.</p>
+    <div class="buttons">
+      <button type="button" class="btn-color red" data-color="red" aria-label="Rouge"></button>
+      <button type="button" class="btn-color yellow" data-color="yellow" aria-label="Jaune"></button>
+      <button type="button" class="btn-color green" data-color="green" aria-label="Vert"></button>
+      <button type="button" class="btn-color blue" data-color="blue" aria-label="Bleu"></button>
+    </div>
+  </div>
+
+  <button type="button" class="btn-start" id="btnStart" data-i18n="j1_btn_start">Démarrer</button>
+
+  <div class="result-overlay" id="resultOverlay">
+    <div class="result-box" id="resultBox">
+      <h2 id="resultTitle"></h2>
+      <p id="resultMessage"></p>
+      <button type="button" class="btn-start" id="btnReplay" data-i18n="j1_btn_replay">Rejouer</button>
+    </div>
+  </div>
+
+  <audio id="bgMusic" loop autoplay>
+    <source src="audio/beast-game.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="lang.js"></script>
+  <script>
+    (function() {
+      var saved = localStorage.getItem('clement-game-lang') || 'fr';
+      if (window.setLang) window.setLang(saved);
+      var back = document.getElementById('backHome');
+      if (back && window.getJ1Text) back.setAttribute('aria-label', window.getJ1Text('j1_back_aria'));
+      var rulesModal = document.getElementById('j1RulesModal');
+      var rulesBtn = document.getElementById('j1RulesBtn');
+      if (rulesModal && rulesBtn) {
+        rulesBtn.addEventListener('click', function() {
+          rulesModal.classList.add('hidden');
+        });
+      }
+    })();
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jeux de timer - CLEMENT GAME SAISON 1</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="j2.css">
+</head>
+<body>
+  <!-- Modale des consignes étape 1 (j2) -->
+  <div class="j2-rules-modal" id="j2RulesModal">
+    <div class="j2-rules-box">
+      <h2 class="j2-rules-title" id="j2RulesTitle">Règles du jeu</h2>
+      <p class="j2-rules-text" id="j2RulesText">Un timer affiche les secondes et centièmes. Clique sur « Arrêter » quand tu penses avoir atteint 5 secondes. Tolérance : entre 4,95 s et 5,05 s.</p>
+      <button type="button" class="btn-start" id="j2RulesBtn">Démarrer</button>
+    </div>
+  </div>
+
+  <!-- Modale "Étape 1 réussie" → passage à l'étape 2 -->
+  <div class="j2-rules-modal j2-modal-ep1-success hidden" id="j2Ep1SuccessModal">
+    <div class="j2-rules-box">
+      <h2 class="j2-rules-title" id="j2Ep1SuccessTitle">Étape 1 réussie !</h2>
+      <p class="j2-ep1-success-time hidden" id="j2Ep1SuccessTime"></p>
+      <p class="j2-rules-text" id="j2Ep1SuccessText">Passage à l'étape 2...</p>
+      <button type="button" class="btn-start" id="j2Ep1SuccessBtn">Continuer</button>
+    </div>
+  </div>
+
+  <!-- Modale des consignes étape 2 (chrono invisible, 15–17 s) -->
+  <div class="j2-rules-modal hidden" id="j2Ep2RulesModal">
+    <div class="j2-rules-box">
+      <h2 class="j2-rules-title" id="j2Ep2RulesTitle">Étape 2</h2>
+      <p class="j2-rules-text" id="j2Ep2RulesText">Le chronomètre est invisible. Lance-le avec « Démarrer », puis arrête-le entre la 15e et la 17e seconde avec « Arrêter ». Si tu es en dehors de cette fenêtre, tu perds.</p>
+      <button type="button" class="btn-start" id="j2Ep2RulesBtn">Démarrer</button>
+    </div>
+  </div>
+
+  <a href="index.html" class="back-home" id="backHome" aria-label="Retour accueil">←</a>
+
+  <button type="button" class="j2-skip-link" id="j2SkipLink">Passer l'épreuve</button>
+
+  <h1>CLEMENT GAME SAISON 1</h1>
+  <p class="j2-instruction" id="j2Instruction">Arrête le timer à 5 secondes (tolérance 0,05 s).</p>
+
+  <!-- Étape 1 : timer visible -->
+  <div class="j2-timer-wrap" id="j2TimerWrap">
+    <div class="j2-timer-display" id="j2TimerDisplay">0.00</div>
+    <p class="j2-timer-units" id="j2TimerUnits">s</p>
+  </div>
+
+  <button type="button" class="j2-btn-stop" id="j2BtnStop">Arrêter</button>
+
+  <!-- Étape 2 : chrono invisible, bouton Démarrer puis Arrêter -->
+  <div class="j2-ep2-area hidden" id="j2Ep2Area">
+    <p class="j2-ep2-hint" id="j2Ep2Hint">Chrono invisible : lance-le puis arrête entre 15 s et 17 s.</p>
+    <button type="button" class="j2-btn-start" id="j2BtnStart">Démarrer</button>
+    <button type="button" class="j2-btn-stop j2-btn-stop-ep2 hidden" id="j2BtnStopEp2">Arrêter</button>
+  </div>
+
+  <!-- Modale mot de passe pour passer l'épreuve -->
+  <div class="j2-skip-modal hidden" id="j2SkipModal">
+    <div class="j2-rules-box j2-skip-box">
+      <h2 class="j2-rules-title" id="j2SkipModalTitle">Passer l'épreuve</h2>
+      <input type="password" class="j2-skip-input" id="j2SkipInput" placeholder="Mot de passe" autocomplete="off">
+      <p class="j2-skip-error" id="j2SkipError"></p>
+      <button type="button" class="btn-start" id="j2SkipSubmit">Valider</button>
+    </div>
+  </div>
+
+  <div class="j2-result-overlay" id="j2ResultOverlay">
+    <div class="j2-result-box" id="j2ResultBox">
+      <p class="j2-result-time" id="j2ResultTime"></p>
+      <h2 id="j2ResultTitle"></h2>
+      <a href="index.html" class="j2-btn-back" id="j2BtnBack">Retour à l'accueil</a>
+      <a href="pintro.html" class="j2-btn-back j2-btn-restart" id="j2BtnRestart" style="display:none;">Recommencer</a>
+    </div>
+  </div>
+
+  <script src="lang.js"></script>
+  <script src="j2.js"></script>
+</body>
+</html>

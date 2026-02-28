@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLEMENT GAME SAISON 1</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="home.css">
+</head>
+<body class="home-page">
+  <div class="counter-badge" id="counterBadge">0/5</div>
+  <div class="starcoin-badge" id="starcoinBadge">⭐ 0</div>
+  <div class="settings-wrap">
+    <button type="button" class="settings-btn" id="settingsBtn" aria-label="Settings" data-i18n="settings">Settings</button>
+    <div class="settings-dropdown" id="settingsDropdown">
+      <div class="settings-option">
+        <span class="settings-label" data-i18n="language">Language</span>
+        <select id="langSelect" aria-label="Language">
+          <option value="fr" data-i18n="lang_fr">Français</option>
+          <option value="en" data-i18n="lang_en">English</option>
+          <option value="es" data-i18n="lang_es">Español</option>
+          <option value="zh" data-i18n="lang_zh">中文</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="home-title" id="homeTitle">CLEMENT GAME SAISON 1</h1>
+
+  <!-- Modale rappel bonus (après retour de j2) -->
+  <div class="code-modal bonus-reminder-modal" id="bonusReminderModal">
+    <div class="code-modal-box">
+      <h2 class="code-modal-title" id="bonusReminderTitle">Rappel</h2>
+      <p class="bonus-reminder-text" id="bonusReminderText">Le jeu bonus est disponible. Fais-le pour faciliter les prochaines épreuves.</p>
+      <button type="button" class="code-modal-btn" id="bonusReminderBtn">OK</button>
+    </div>
+  </div>
+
+  <!-- Modale code pour débloquer un jeu -->
+  <div class="code-modal" id="codeModal">
+    <div class="code-modal-box">
+      <h2 class="code-modal-title" id="codeModalTitle">Code requis</h2>
+      <input type="password" inputmode="numeric" pattern="[0-9]*" class="code-modal-input" id="codeModalInput" placeholder="Entrez le code" maxlength="6" autocomplete="off">
+      <p class="code-modal-error" id="codeModalError"></p>
+      <button type="button" class="code-modal-btn" id="codeModalSubmit">Valider</button>
+    </div>
+  </div>
+
+  <a href="jbonus.html" class="bonus-btn-fixed" id="gameBonusCard" style="display:none;">
+    <span id="gameBonusCardTitle" data-i18n="game_bonus">Jeu bonus</span>
+  </a>
+
+  <div class="games-grid">
+    <a href="j1.html" class="game-card" id="game1Card">
+      <span class="game-card-title" data-i18n="game1">Mémoire de couleurs</span>
+      <span class="game-card-check" id="game1Check" aria-hidden="true">✓</span>
+    </a>
+    <a href="#" class="game-card game-card-placeholder" id="game2Card">
+      <span class="game-card-title" id="game2CardTitle">Jeu 2</span>
+      <span class="game-card-check" id="game2Check" aria-hidden="true">✓</span>
+    </a>
+    <a href="#" class="game-card game-card-placeholder" id="game3Card">
+      <span class="game-card-title" id="game3CardTitle">Jeu 3</span>
+      <span class="game-card-check" id="game3Check" aria-hidden="true">✓</span>
+    </a>
+    <div class="game-card game-card-placeholder" data-i18n="game4">Jeu 4</div>
+    <div class="game-card game-card-placeholder" data-i18n="game5">Jeu 5</div>
+  </div>
+
+  <script src="lang.js"></script>
+  <script>
+    (function() {
+      if (sessionStorage.getItem('clement-from-pintro') !== '1') {
+        window.location.replace('pintro.html');
+        return;
+      }
+
+      const btn = document.getElementById('settingsBtn');
+      const dropdown = document.getElementById('settingsDropdown');
+      const langSelect = document.getElementById('langSelect');
+
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+      });
+
+      document.addEventListener('click', function() {
+        dropdown.classList.remove('open');
+      });
+
+      dropdown.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+
+      function getStarcoin() {
+        return parseInt(localStorage.getItem('clement-starcoin'), 10) || 0;
+      }
+      function updateStarcoin() {
+        var el = document.getElementById('starcoinBadge');
+        if (el) el.textContent = '⭐ ' + getStarcoin().toLocaleString('fr-FR');
+      }
+      function updateCounter() {
+        var n = parseInt(localStorage.getItem('clement-game-completed'), 10) || 0;
+        var el = document.getElementById('counterBadge');
+        if (el) el.textContent = n + '/5';
+        updateStarcoin();
+        var g1 = document.getElementById('game1Card');
+        var g2 = document.getElementById('game2Card');
+        var c1 = document.getElementById('game1Check');
+        var c2 = document.getElementById('game2Check');
+        var g2Title = document.getElementById('game2CardTitle');
+        if (g1) {
+          if (n >= 1) {
+            g1.classList.add('game-card-disabled');
+            g1.setAttribute('href', '#');
+            if (c1) { c1.style.display = 'block'; c1.setAttribute('aria-hidden', 'false'); }
+          } else {
+            g1.classList.remove('game-card-disabled');
+            g1.setAttribute('href', 'j1.html');
+            if (c1) { c1.style.display = 'none'; c1.setAttribute('aria-hidden', 'true'); }
+          }
+        }
+        if (g2 && window.getText) {
+          if (g2Title) g2Title.textContent = n >= 1 ? window.getText('game2_unlocked') : window.getText('game2');
+          if (n >= 2) {
+            g2.classList.remove('game-card-placeholder');
+            g2.classList.add('game-card-disabled');
+            g2.setAttribute('href', '#');
+            if (c2) { c2.style.display = 'block'; c2.setAttribute('aria-hidden', 'false'); }
+          } else if (n >= 1) {
+            g2.classList.remove('game-card-placeholder', 'game-card-disabled');
+            g2.setAttribute('href', 'j2.html');
+            if (c2) { c2.style.display = 'none'; c2.setAttribute('aria-hidden', 'true'); }
+          } else {
+            g2.classList.add('game-card-placeholder');
+            g2.classList.remove('game-card-disabled');
+            g2.setAttribute('href', '#');
+            if (c2) { c2.style.display = 'none'; c2.setAttribute('aria-hidden', 'true'); }
+          }
+        }
+        var g3 = document.getElementById('game3Card');
+        var g3Title = document.getElementById('game3CardTitle');
+        var c3 = document.getElementById('game3Check');
+        if (g3 && window.getText) {
+          if (g3Title) g3Title.textContent = n >= 2 ? window.getText('game3_unlocked') : window.getText('game3');
+          if (n >= 3) {
+            g3.classList.remove('game-card-placeholder');
+            g3.classList.add('game-card-disabled');
+            g3.setAttribute('href', '#');
+            if (c3) { c3.style.display = 'block'; c3.setAttribute('aria-hidden', 'false'); }
+          } else if (n >= 2) {
+            g3.classList.remove('game-card-placeholder', 'game-card-disabled');
+            g3.setAttribute('href', 'j3.html');
+            if (c3) { c3.style.display = 'none'; c3.setAttribute('aria-hidden', 'true'); }
+          } else {
+            g3.classList.add('game-card-placeholder');
+            g3.classList.remove('game-card-disabled');
+            g3.setAttribute('href', '#');
+            if (c3) { c3.style.display = 'none'; c3.setAttribute('aria-hidden', 'true'); }
+          }
+        }
+        var bonusCard = document.getElementById('gameBonusCard');
+        var bonusTitle = document.getElementById('gameBonusCardTitle');
+        var bonusUsed = localStorage.getItem('clement-bonus-used') === '1';
+        if (bonusCard) bonusCard.style.display = (n >= 2 && !bonusUsed) ? 'flex' : 'none';
+        if (bonusTitle && window.getText) bonusTitle.textContent = window.getText('game_bonus');
+      }
+
+      var saved = localStorage.getItem('clement-game-lang') || 'fr';
+      if (langSelect) langSelect.value = saved;
+      window.setLang(saved);
+      updateCounter();
+
+      var bonusReminderModal = document.getElementById('bonusReminderModal');
+      var bonusReminderTitle = document.getElementById('bonusReminderTitle');
+      var bonusReminderText = document.getElementById('bonusReminderText');
+      var bonusReminderBtn = document.getElementById('bonusReminderBtn');
+      if (sessionStorage.getItem('clement-show-bonus-reminder') === '1') {
+        sessionStorage.removeItem('clement-show-bonus-reminder');
+        var n = parseInt(localStorage.getItem('clement-game-completed'), 10) || 0;
+        var bonusUsed = localStorage.getItem('clement-bonus-used') === '1';
+        if (n >= 2 && !bonusUsed && bonusReminderModal) {
+          if (bonusReminderTitle && window.getText) bonusReminderTitle.textContent = window.getText('bonus_reminder_title');
+          if (bonusReminderText && window.getText) bonusReminderText.textContent = window.getText('bonus_reminder_text');
+          if (bonusReminderBtn && window.getText) bonusReminderBtn.textContent = window.getText('bonus_reminder_btn');
+          bonusReminderModal.classList.add('visible');
+        }
+      }
+      if (bonusReminderBtn) bonusReminderBtn.addEventListener('click', function() {
+        if (bonusReminderModal) bonusReminderModal.classList.remove('visible');
+      });
+
+      if (langSelect) {
+        langSelect.addEventListener('change', function() {
+          window.setLang(this.value);
+          updateCounter();
+        });
+      }
+
+      var CODE_UNLOCK = '1428';
+      var codeModal = document.getElementById('codeModal');
+      var codeModalInput = document.getElementById('codeModalInput');
+      var codeModalError = document.getElementById('codeModalError');
+      var codeModalSubmit = document.getElementById('codeModalSubmit');
+      var codeModalTitle = document.getElementById('codeModalTitle');
+      var pendingGame = null;
+
+      function setCodeModalLang() {
+        if (!window.getText) return;
+        if (codeModalTitle) codeModalTitle.textContent = window.getText('code_modal_title');
+        if (codeModalInput) codeModalInput.placeholder = window.getText('code_modal_placeholder');
+        if (codeModalSubmit) codeModalSubmit.textContent = window.getText('code_modal_submit');
+      }
+      setCodeModalLang();
+
+      function showCodeModal(gameNum) {
+        pendingGame = gameNum;
+        if (codeModalError) codeModalError.textContent = '';
+        if (codeModalInput) { codeModalInput.value = ''; codeModalInput.focus(); }
+        if (codeModal) codeModal.classList.add('visible');
+      }
+
+      function hideCodeModal() {
+        pendingGame = null;
+        if (codeModal) codeModal.classList.remove('visible');
+      }
+
+      function submitCode() {
+        var val = codeModalInput ? codeModalInput.value.trim() : '';
+        if (val !== CODE_UNLOCK) {
+          if (codeModalError) codeModalError.textContent = window.getText ? window.getText('code_modal_wrong') : 'Code incorrect';
+          return;
+        }
+        var game = pendingGame;
+        hideCodeModal();
+        if (game === 1) window.location.href = 'j1.html';
+        else if (game === 2) window.location.href = 'j2.html';
+        else if (game === 3) window.location.href = 'j3.html';
+      }
+
+      if (codeModalSubmit) codeModalSubmit.addEventListener('click', submitCode);
+      if (codeModalInput) codeModalInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') submitCode();
+      });
+
+      var game1Card = document.getElementById('game1Card');
+      var game2Card = document.getElementById('game2Card');
+      if (game1Card) game1Card.addEventListener('click', function(e) {
+        if (this.classList.contains('game-card-disabled')) {
+          e.preventDefault();
+          showCodeModal(1);
+        }
+      });
+      if (game2Card) game2Card.addEventListener('click', function(e) {
+        if (this.classList.contains('game-card-placeholder') || this.classList.contains('game-card-disabled')) {
+          e.preventDefault();
+          showCodeModal(2);
+        }
+      });
+
+      var game3Card = document.getElementById('game3Card');
+      if (game3Card) game3Card.addEventListener('click', function(e) {
+        if (this.classList.contains('game-card-placeholder') || this.classList.contains('game-card-disabled')) {
+          e.preventDefault();
+          showCodeModal(3);
+        }
+      });
+
+      if (langSelect) langSelect.addEventListener('change', setCodeModalLang);
+    })();
+  </script>
+</body>
+</html>

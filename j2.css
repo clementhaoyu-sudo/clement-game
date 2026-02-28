@@ -1,0 +1,284 @@
+.j2-rules-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.j2-rules-modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.j2-rules-box {
+  background: linear-gradient(145deg, #1a1a2e, #16213e);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.j2-rules-title {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #eee;
+}
+
+.j2-rules-text {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  opacity: 0.95;
+  margin-bottom: 1.5rem;
+}
+
+.j2-ep1-success-time {
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  color: #2a9d8f;
+  margin-bottom: 0.75rem;
+}
+
+.j2-ep1-success-time.hidden {
+  display: none;
+}
+
+.j2-instruction {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.j2-timer-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 2rem;
+}
+
+.j2-timer-display {
+  font-size: 3.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  min-width: 4ch;
+}
+
+.j2-timer-units {
+  font-size: 1.5rem;
+  opacity: 0.8;
+}
+
+.j2-btn-stop {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #e63946, #c1121f);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(230, 57, 70, 0.4);
+  transition: transform 0.12s ease;
+}
+
+.j2-btn-stop:hover {
+  transform: scale(1.03);
+}
+
+.j2-timer-wrap.hidden,
+.j2-btn-stop.hidden,
+.j2-instruction.hidden {
+  display: none !important;
+}
+
+.j2-ep2-area {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.j2-ep2-area.hidden {
+  display: none !important;
+}
+
+.j2-ep2-hint {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+
+.j2-btn-start {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #2a9d8f, #238276);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(42, 157, 143, 0.4);
+  transition: transform 0.12s ease;
+}
+
+.j2-btn-start:hover {
+  transform: scale(1.03);
+}
+
+.j2-btn-stop-ep2.hidden {
+  display: none !important;
+}
+
+.j2-btn-stop-ep2:not(.hidden) {
+  display: inline-block;
+}
+
+.j2-result-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 2rem;
+}
+
+.j2-result-overlay.visible {
+  display: flex;
+}
+
+.j2-result-box {
+  background: linear-gradient(145deg, #1a1a2e, #16213e);
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  max-width: 360px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.j2-result-time {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.95;
+}
+
+.j2-result-box h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.j2-result-box.win h2 {
+  color: #2a9d8f;
+}
+
+.j2-result-box.lose h2 {
+  color: #e63946;
+}
+
+.j2-result-box .j2-btn-back {
+  margin: 0 0.25rem;
+}
+
+.j2-btn-restart {
+  background: linear-gradient(145deg, #e63946, #c1121f) !important;
+  box-shadow: 0 4px 14px rgba(230, 57, 70, 0.4) !important;
+}
+
+.j2-btn-back {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #4361ee, #3a56d4);
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(67, 97, 238, 0.4);
+  transition: transform 0.12s ease;
+}
+
+.j2-btn-back:hover {
+  transform: scale(1.03);
+}
+
+/* Lien et modale "Passer l'épreuve" */
+.j2-skip-link {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  color: rgba(255,255,255,0.6);
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.j2-skip-link:hover {
+  color: rgba(255,255,255,0.9);
+  border-color: rgba(255,255,255,0.45);
+}
+
+.j2-skip-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.j2-skip-modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.j2-skip-box {
+  max-width: 320px;
+}
+
+.j2-skip-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.08);
+  color: #eee;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.j2-skip-input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.j2-skip-error {
+  font-size: 0.9rem;
+  color: #e63946;
+  min-height: 1.2rem;
+  margin-bottom: 0.75rem;
+}
