@@ -118,6 +118,10 @@
   margin-bottom: 1.5rem;
 }
 
+.j2-ep2-hint.hidden {
+  display: none !important;
+}
+
 .j2-btn-start {
   padding: 1rem 2rem;
   font-size: 1.1rem;
@@ -130,6 +134,10 @@
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(42, 157, 143, 0.4);
   transition: transform 0.12s ease;
+}
+
+.j2-btn-start.hidden {
+  display: none !important;
 }
 
 .j2-btn-start:hover {
@@ -189,6 +197,114 @@
 
 .j2-result-box .j2-btn-back {
   margin: 0 0.25rem;
+}
+
+.j2-lose-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.j2-lose-options .j2-btn-back,
+.j2-lose-options .j2-btn-retry,
+.j2-lose-options .j2-btn-pass {
+  margin: 0;
+}
+
+.j2-btn-retry {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #f4a261, #e76f51);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(244, 162, 97, 0.4);
+  transition: transform 0.12s ease;
+}
+
+.j2-btn-retry:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+
+.j2-btn-retry:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.j2-btn-pass {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #4361ee, #3a56d4);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(67, 97, 238, 0.4);
+  transition: transform 0.12s ease;
+}
+
+.j2-btn-pass:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+
+.j2-btn-pass:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.j2-lose-notenough {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  margin-top: 0.75rem;
+}
+
+.j2-rules-extra {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.9;
+  margin-bottom: 1.25rem;
+  color: rgba(255,255,255,0.9);
+}
+
+.j2-confirm-pay-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.j2-btn-cancel-pay,
+.j2-btn-confirm-pay {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.j2-btn-cancel-pay {
+  background: rgba(255,255,255,0.15);
+  color: #eee;
+}
+
+.j2-btn-confirm-pay {
+  background: linear-gradient(145deg, #2a9d8f, #238276);
+  color: white;
+}
+
+.j2-btn-cancel-pay:hover,
+.j2-btn-confirm-pay:hover {
+  transform: scale(1.03);
 }
 
 .j2-btn-restart {

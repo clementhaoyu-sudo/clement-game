@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rangement par type de fond - Ultimate Challenge</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="home.css">
+  <style>
+    .rangement-page { justify-content: flex-start; padding-top: 2rem; padding-bottom: 3rem; }
+    .rangement-back { position: fixed; top: 1rem; left: 1rem; z-index: 40; padding: 0.5rem 0.75rem; font-size: 1rem; color: #eee; text-decoration: none; background: rgba(255,255,255,0.1); border-radius: 8px; }
+    .rangement-back:hover { background: rgba(255,255,255,0.2); }
+    .rangement-title { font-size: 1.6rem; margin-bottom: 0.5rem; text-align: center; }
+    .rangement-intro { text-align: center; opacity: 0.9; margin-bottom: 1rem; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .rangement-save-wrap { text-align: center; margin-bottom: 1.5rem; }
+    .rangement-save-btn { padding: 0.6rem 1.2rem; font-size: 1rem; font-weight: 700; color: #1a1a1a; background: linear-gradient(180deg, #f0c14b 0%, #d4a017 100%); border: none; border-radius: 10px; cursor: pointer; }
+    .rangement-save-btn:hover { background: linear-gradient(180deg, #ffd54f 0%, #f0c14b 100%); }
+    .rangement-save-feedback { font-size: 0.9rem; color: #7cb342; margin-top: 0.5rem; }
+    .rangement-section { margin-bottom: 2.5rem; max-width: 900px; margin-left: auto; margin-right: auto; padding: 1rem; border-radius: 14px; border: 2px dashed rgba(255,255,255,0.15); transition: border-color 0.2s, background 0.2s; min-height: 80px; }
+    .rangement-section.drag-over { border-color: #f0c14b; background: rgba(240,193,75,0.08); }
+    .rangement-section-title { font-size: 1.2rem; font-weight: 700; color: #f0c14b; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+    .rangement-fond-preview { width: 48px; height: 64px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); }
+    .rangement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.75rem; }
+    .rangement-card { text-align: center; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 0.5rem; border: 1px solid rgba(255,255,255,0.12); cursor: grab; transition: border-color 0.2s; }
+    .rangement-card:hover { border-color: #f0c14b; }
+    .rangement-card.dragging { opacity: 0.6; cursor: grabbing; }
+    .rangement-card img { width: 100%; height: auto; border-radius: 8px; display: block; margin-bottom: 0.35rem; pointer-events: none; }
+    .rangement-card-name { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rangement-card-ovr { font-size: 0.75rem; color: #f0c14b; }
+    .rangement-empty { font-size: 0.9rem; opacity: 0.6; padding: 0.75rem 0; }
+    .rangement-fond-placeholder { width: 48px; height: 64px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: rgba(255,255,255,0.5); }
+  </style>
+</head>
+<body class="home-page rangement-page">
+  <a href="createur.html" class="rangement-back">← Retour créateur</a>
+
+  <h1 class="rangement-title">Rangement par type de fond</h1>
+  <p class="rangement-intro">Les joueurs sont répartis automatiquement : ceux avec une note <strong>en dessous de 85</strong> vont dans <strong>Or texture</strong>, les autres dans les autres types. Tu peux déplacer une carte si tu veux. Clique sur « Enregistrer le rangement » pour garder tes changements.</p>
+  <div class="rangement-save-wrap">
+    <button type="button" class="rangement-save-btn" id="rangementSaveBtn">Enregistrer le rangement</button>
+    <p class="rangement-save-feedback" id="rangementSaveFeedback" style="display: none;"></p>
+  </div>
+
+  <div id="rangementRoot"></div>
+
+  <script src="joueurs-data.js"></script>
+  <script src="fonds-joueurs.js"></script>
+  <script>
+    (function() {
+      var STORAGE_KEY = 'clement-rangement';
+      var FOND_TYPES = ['noir-or', 'bleu-cosmos', 'magenta-tots', 'blanc-cristal', 'or-texture'];
+      var FOND_KEYS = FOND_TYPES.concat('autre');
+      var FOND_LABELS = {
+        'noir-or': 'Noir & Or géométrique',
+        'bleu-cosmos': 'Bleu cosmos',
+        'magenta-tots': 'Magenta / TOTS',
+        'blanc-cristal': 'Blanc cristal',
+        'or-texture': 'Or texture',
+        'autre': 'Autre'
+      };
+      var FOND_IMAGES = {
+        'noir-or': 'assets/rangement/fond-noir-or.png',
+        'bleu-cosmos': 'assets/rangement/fond-bleu-cosmos.png',
+        'magenta-tots': 'assets/rangement/fond-magenta-tots.png',
+        'blanc-cristal': 'assets/rangement/fond-blanc-cristal.png',
+        'or-texture': 'assets/rangement/fond-or-texture.png'
+      };
+
+      var list = window.JOUEURS_COLLECTION || [];
+      var override = typeof window.FONDS_PAR_IMAGE === 'object' ? window.FONDS_PAR_IMAGE : {};
+
+      function loadSavedMapping() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) return JSON.parse(raw);
+        } catch (e) {}
+        return null;
+      }
+
+      function isValidFond(f) {
+        return FOND_KEYS.indexOf(f) >= 0;
+      }
+
+      function buildInitialMapping() {
+        var saved = loadSavedMapping();
+        var map = {};
+        var index = 0;
+        list.forEach(function(p) {
+          var fond = override[p.image] || (saved && saved[p.image]);
+          if (!isValidFond(fond)) {
+            var ovr = p.ovr != null ? p.ovr : 0;
+            if (ovr < 85) {
+              fond = 'or-texture';
+            } else {
+              fond = FOND_TYPES[index % FOND_TYPES.length];
+              index++;
+            }
+          }
+          map[p.image] = fond;
+        });
+        return map;
+      }
+
+      var mapping = buildInitialMapping();
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(mapping));
+      } catch (e) {}
+
+      function getByFond() {
+        var byFond = {};
+        FOND_KEYS.forEach(function(k) { byFond[k] = []; });
+        list.forEach(function(p) {
+          var fond = mapping[p.image];
+          if (!isValidFond(fond)) fond = 'autre';
+          byFond[fond].push(p);
+        });
+        return byFond;
+      }
+
+      function makeCard(p) {
+        var card = document.createElement('div');
+        card.className = 'rangement-card';
+        card.draggable = true;
+        card.setAttribute('data-image', p.image || '');
+        var img = document.createElement('img');
+        img.src = p.image || '';
+        img.alt = p.name || '';
+        img.loading = 'lazy';
+        card.appendChild(img);
+        var name = document.createElement('div');
+        name.className = 'rangement-card-name';
+        name.textContent = p.name || '—';
+        card.appendChild(name);
+        var ovr = document.createElement('div');
+        ovr.className = 'rangement-card-ovr';
+        ovr.textContent = 'OVR ' + (p.ovr != null ? p.ovr : '—');
+        card.appendChild(ovr);
+        card.addEventListener('dragstart', function(e) {
+          e.dataTransfer.setData('text/plain', p.image || '');
+          e.dataTransfer.effectAllowed = 'move';
+          card.classList.add('dragging');
+        });
+        card.addEventListener('dragend', function() {
+          card.classList.remove('dragging');
+        });
+        card.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          var sec = card.closest('.rangement-section');
+          if (sec) sec.classList.add('drag-over');
+        });
+        card.addEventListener('dragleave', function() {
+          var sec = card.closest('.rangement-section');
+          if (sec) sec.classList.remove('drag-over');
+        });
+        card.addEventListener('drop', function(e) {
+          e.preventDefault();
+          var sec = card.closest('.rangement-section');
+          if (sec) sec.classList.remove('drag-over');
+          var imagePath = e.dataTransfer.getData('text/plain');
+          if (!imagePath) return;
+          var fond = sec.getAttribute('data-fond');
+          mapping[imagePath] = fond;
+          render();
+        });
+        return card;
+      }
+
+      function render() {
+        var root = document.getElementById('rangementRoot');
+        if (!root) return;
+        root.innerHTML = '';
+
+        var byFond = getByFond();
+
+        FOND_KEYS.forEach(function(key) {
+          var section = document.createElement('div');
+          section.className = 'rangement-section';
+          section.setAttribute('data-fond', key);
+
+          var title = document.createElement('h2');
+          title.className = 'rangement-section-title';
+          if (FOND_IMAGES[key]) {
+            var preview = document.createElement('img');
+            preview.className = 'rangement-fond-preview';
+            preview.src = FOND_IMAGES[key];
+            preview.alt = '';
+            title.appendChild(preview);
+          } else {
+            var ph = document.createElement('div');
+            ph.className = 'rangement-fond-placeholder';
+            ph.textContent = '?';
+            title.appendChild(ph);
+          }
+          title.appendChild(document.createTextNode(FOND_LABELS[key]));
+          section.appendChild(title);
+
+          var grid = document.createElement('div');
+          grid.className = 'rangement-grid';
+          var players = byFond[key] || [];
+          if (players.length === 0) {
+            var empty = document.createElement('p');
+            empty.className = 'rangement-empty';
+            empty.textContent = 'Glisser des cartes ici.';
+            grid.appendChild(empty);
+          } else {
+            players.forEach(function(p) {
+              grid.appendChild(makeCard(p));
+            });
+          }
+          section.appendChild(grid);
+
+          section.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            section.classList.add('drag-over');
+          });
+          section.addEventListener('dragleave', function() {
+            section.classList.remove('drag-over');
+          });
+          section.addEventListener('drop', function(e) {
+            e.preventDefault();
+            section.classList.remove('drag-over');
+            var imagePath = e.dataTransfer.getData('text/plain');
+            if (!imagePath) return;
+            mapping[imagePath] = key;
+            render();
+          });
+
+          root.appendChild(section);
+        });
+      }
+
+      document.getElementById('rangementSaveBtn').addEventListener('click', function() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(mapping));
+          var fb = document.getElementById('rangementSaveFeedback');
+          if (fb) {
+            fb.textContent = 'Rangement enregistré.';
+            fb.style.display = 'block';
+            setTimeout(function() { fb.style.display = 'none'; }, 2500);
+          }
+        } catch (e) {
+          var fb = document.getElementById('rangementSaveFeedback');
+          if (fb) { fb.textContent = 'Erreur lors de l\'enregistrement.'; fb.style.display = 'block'; }
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

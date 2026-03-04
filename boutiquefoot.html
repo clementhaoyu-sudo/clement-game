@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boutique foot - Ultimate Challenge</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="boutique.css">
+</head>
+<body class="boutique-page">
+  <a href="boutique.html" class="back-home">← Boutique</a>
+  <div class="boutique-starcoin-badge" id="boutiqueStarcoinBadge">💎 0</div>
+
+  <h1 class="boutique-title">Boutique foot</h1>
+
+  <main class="boutique-main" style="max-width: 720px; margin: 0 auto;">
+    <h2 class="boutique-category-title">Pack classic</h2>
+    <p class="boutique-category-desc">Achète un pack : tu gagnes un joueur au hasard dans la fourchette OVR. <a href="joueurs-collection.html" style="color: #f0c14b; font-weight: 600;">Voir la collection</a> · <a href="macompo.html" style="color: #f0c14b; font-weight: 600;">Ma composition</a></p>
+    <div class="boutique-packs">
+      <button type="button" class="boutique-pack" data-price="55000" data-min="79" data-max="84" data-ovr="79–84">
+        <span class="boutique-pack-price">55 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">79–84</span>
+      </button>
+      <button type="button" class="boutique-pack" data-price="75000" data-min="81" data-max="86" data-ovr="81–86">
+        <span class="boutique-pack-price">75 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">81–86</span>
+      </button>
+      <button type="button" class="boutique-pack" data-price="90000" data-min="84" data-max="88" data-ovr="84–88">
+        <span class="boutique-pack-price">90 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">84–88</span>
+      </button>
+      <button type="button" class="boutique-pack" data-price="80000" data-min="79" data-max="88" data-ovr="79–88">
+        <span class="boutique-pack-price">80 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">79–88</span>
+      </button>
+      <button type="button" class="boutique-pack" data-price="100000" data-min="85" data-max="90" data-ovr="85–90">
+        <span class="boutique-pack-price">100 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">85–90</span>
+      </button>
+      <button type="button" class="boutique-pack" data-price="150000" data-min="89" data-max="95" data-ovr="89–95">
+        <span class="boutique-pack-price">150 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">89–95</span>
+      </button>
+      <button type="button" class="boutique-pack" data-price="175000" data-min="89" data-max="99" data-ovr="89–99">
+        <span class="boutique-pack-price">175 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">89–99</span>
+      </button>
+      <button type="button" class="boutique-pack" data-price="200000" data-min="91" data-max="99" data-ovr="91–99">
+        <span class="boutique-pack-price">200 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">91–99</span>
+      </button>
+      <button type="button" class="boutique-pack" data-price="250000" data-min="94" data-max="99" data-ovr="94–99">
+        <span class="boutique-pack-price">250 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">94–99</span>
+      </button>
+      <button type="button" class="boutique-pack" data-price="300000" data-min="96" data-max="99" data-ovr="96–99">
+        <span class="boutique-pack-price">300 000 <span class="boutique-pack-currency">💎</span></span>
+        <span class="boutique-pack-ovr">96–99</span>
+      </button>
+    </div>
+  </main>
+
+  <div class="boutique-modal" id="confirmModal" aria-hidden="true">
+    <div class="boutique-modal-box">
+      <h2 class="boutique-modal-title">Confirmer le paiement</h2>
+      <p class="boutique-modal-text" id="confirmModalText">Payer 25 000 💎 pour un pack OVR 82–86 ?</p>
+      <div class="boutique-modal-btns">
+        <button type="button" class="boutique-modal-btn boutique-modal-btn-cancel" id="confirmCancel">Annuler</button>
+        <button type="button" class="boutique-modal-btn boutique-modal-btn-pay" id="confirmPay">Payer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="boutique-open-overlay" id="openOverlay" aria-hidden="true">
+    <div class="boutique-open-content">
+      <div class="boutique-open-card" id="openCard"></div>
+      <p class="boutique-open-text" id="openText">Ouverture du pack…</p>
+      <div class="boutique-open-progress"><span class="boutique-open-progress-bar" id="openProgressBar"></span></div>
+    </div>
+  </div>
+
+  <div class="boutique-modal" id="resultModal" aria-hidden="true">
+    <div class="boutique-modal-box boutique-result-box">
+      <h2 class="boutique-modal-title">Tu as obtenu</h2>
+      <div class="boutique-result-card-wrap" id="resultCardWrap">
+        <img class="boutique-result-card-img" id="resultCardImg" src="" alt="" />
+      </div>
+      <p class="boutique-result-player" id="resultPlayer"></p>
+      <button type="button" class="boutique-modal-btn boutique-modal-btn-ok" id="resultOk">OK</button>
+    </div>
+  </div>
+
+  <script src="lang.js"></script>
+  <script src="joueurs-data.js"></script>
+  <script src="boutiquefoot.js"></script>
+</body>
+</html>

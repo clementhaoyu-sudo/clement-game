@@ -5,6 +5,52 @@
   justify-content: center;
   min-height: 100vh;
   padding: 2rem;
+  padding-bottom: 5rem;
+}
+
+.pintro-starcoin-badge {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 50;
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffb400;
+}
+
+.pintro-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 40;
+}
+
+.pintro-bottom-link {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+  border-radius: 8px;
+}
+
+.pintro-bottom-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .pintro-title {
@@ -52,4 +98,16 @@
 
 .pintro-btn:hover {
   transform: scale(1.03);
+}
+
+.pintro-btn-secondary {
+  display: block;
+  margin-top: 1rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+}
+
+.pintro-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
 }

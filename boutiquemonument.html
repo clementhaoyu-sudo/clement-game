@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boutique monuments - Ultimate Challenge</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="boutique.css">
+  <style>
+    .monument-page { justify-content: flex-start; padding-top: 3rem; padding-bottom: 2rem; }
+    .monument-title { font-size: 1.8rem; margin-bottom: 0.5rem; text-align: center; }
+    .monument-desc { font-size: 0.95rem; opacity: 0.85; margin-bottom: 1.5rem; text-align: center; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .monument-nav { margin-bottom: 1.5rem; text-align: center; }
+    .monument-nav a { color: #f0c14b; text-decoration: none; font-weight: 600; }
+    .monument-nav a:hover { text-decoration: underline; }
+    .monument-section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; color: #eee; text-align: center; }
+    .monument-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.25rem; max-width: 720px; margin: 0 auto; }
+    .monument-card { text-align: center; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.12); }
+    .monument-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; display: block; margin-bottom: 0.5rem; }
+    .monument-card-name { font-size: 0.85rem; font-weight: 600; color: #fff; line-height: 1.25; }
+  </style>
+</head>
+<body class="boutique-page monument-page">
+  <a href="boutique.html" class="back-home">← Boutique</a>
+  <div class="boutique-starcoin-badge" id="boutiqueStarcoinBadge">💎 0</div>
+
+  <h1 class="monument-title">Boutique monuments</h1>
+  <p class="monument-desc">Découvre les monuments emblématiques à collectionner.</p>
+  <nav class="monument-nav"><a href="boutique.html">← Retour à la boutique</a></nav>
+
+  <p class="monument-section-title">Collection monument</p>
+  <div id="monumentCollectionRoot" class="monument-grid"></div>
+
+  <script src="lang.js"></script>
+  <script src="monuments-data.js"></script>
+  <script>
+    (function() {
+      var list = window.MONUMENTS_COLLECTION;
+      if (!list) return;
+      var root = document.getElementById('monumentCollectionRoot');
+      if (!root) return;
+      list.forEach(function(m) {
+        var card = document.createElement('div');
+        card.className = 'monument-card';
+        var img = document.createElement('img');
+        img.src = m.image;
+        img.alt = m.name;
+        img.loading = 'lazy';
+        card.appendChild(img);
+        var nameEl = document.createElement('p');
+        nameEl.className = 'monument-card-name';
+        nameEl.textContent = m.name;
+        card.appendChild(nameEl);
+        root.appendChild(card);
+      });
+      var badge = document.getElementById('boutiqueStarcoinBadge');
+      if (badge && typeof localStorage !== 'undefined') {
+        var starcoins = parseInt(localStorage.getItem('starcoins') || '0', 10);
+        badge.textContent = '\uD83D\uDC8E ' + starcoins.toLocaleString('fr-FR');
+      }
+    })();
+  </script>
+</body>
+</html>

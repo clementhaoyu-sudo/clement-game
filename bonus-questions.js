@@ -129,3 +129,27 @@ window.BONUS_QUESTIONS = [
     correct: 1
   }
 ];
+
+/** Questions bonus Histoire & Géographie (débloquées après j3). */
+window.BONUS_QUESTIONS_HISTORY = [
+  { q: "En quelle année a commencé la Première Guerre mondiale ?", options: ["1912", "1914", "1916", "1918"], correct: 1 },
+  { q: "Quel événement a déclenché la Première Guerre mondiale ?", options: ["L'invasion de la Pologne", "L'assassinat de l'archiduc François-Ferdinand à Sarajevo", "La bataille de Verdun", "Le traité de Versailles"], correct: 1 },
+  { q: "Qui était le dirigeant de l'Allemagne pendant la Seconde Guerre mondiale ?", options: ["Staline", "Mussolini", "Adolf Hitler", "Churchill"], correct: 2 },
+  { q: "Que signifie l'abréviation ONU et en quelle année a-t-elle été créée ?", options: ["Organisation des Nations unies, 1945", "Organisation nord-atlantique, 1949", "Organisation mondiale de la santé, 1948", "Organisation du traité de l'Atlantique, 1945"], correct: 0 },
+  { q: "Quel mur célèbre a séparé une ville européenne de 1961 à 1989 ?", options: ["Le mur de Berlin", "Le mur d'Hadrien", "Le mur de l'Atlantique", "Le mur de Vienne"], correct: 0 },
+  { q: "Quelle révolution a eu lieu en Russie en 1917 ?", options: ["La Révolution française", "La Révolution bolchevique (d'Octobre)", "La Révolution industrielle", "La Révolution des œillets"], correct: 1 },
+  { q: "Quel pays a été le premier à envoyer un homme dans l'espace ?", options: ["Les États-Unis", "L'URSS (Union soviétique)", "La Chine", "La France"], correct: 1 },
+  { q: "Qui était le premier président de la Ve République française ?", options: ["François Mitterrand", "Georges Pompidou", "Charles de Gaulle", "Valéry Giscard d'Estaing"], correct: 2 },
+  { q: "Quel traité a officiellement mis fin à la Première Guerre mondiale ?", options: ["Le traité de Rome", "Le traité de Versailles", "Le traité de Maastricht", "Le traité de Tordesillas"], correct: 1 },
+  { q: "Quel mouvement politique a dirigé la Chine depuis 1949 ?", options: ["Le Kuomintang", "Le Parti communiste chinois", "Le Parti nationaliste", "Le Parti libéral"], correct: 1 },
+  { q: "Quel est le pays le plus peuplé du monde aujourd'hui ?", options: ["La Chine", "L'Inde", "Les États-Unis", "L'Indonésie"], correct: 1 },
+  { q: "Quelle est la capitale du Canada ?", options: ["Toronto", "Montréal", "Ottawa", "Vancouver"], correct: 2 },
+  { q: "Quel fleuve traverse Paris ?", options: ["La Loire", "Le Rhône", "La Seine", "La Garonne"], correct: 2 },
+  { q: "Dans quel continent se trouve le désert du Sahara ?", options: ["L'Asie", "L'Amérique", "L'Afrique", "L'Océanie"], correct: 2 },
+  { q: "Quelle est la plus grande île du monde ?", options: ["L'Australie", "La Nouvelle-Guinée", "Bornéo", "Le Groenland"], correct: 3 },
+  { q: "Quel pays européen possède le plus grand territoire ?", options: ["La France", "L'Ukraine", "La Russie", "L'Espagne"], correct: 2 },
+  { q: "Quelle mer borde le sud de la France ?", options: ["La Manche", "L'océan Atlantique", "La Méditerranée", "La mer du Nord"], correct: 2 },
+  { q: "Quelle chaîne de montagnes sépare la France et l'Espagne ?", options: ["Les Alpes", "Les Pyrénées", "Le Jura", "Les Cévennes"], correct: 1 },
+  { q: "Quel pays est surnommé « le pays du Soleil levant » ?", options: ["La Chine", "La Corée du Sud", "Le Japon", "Le Vietnam"], correct: 2 },
+  { q: "Quelle est la capitale de l'Australie ?", options: ["Sydney", "Melbourne", "Canberra", "Brisbane"], correct: 2 }
+];

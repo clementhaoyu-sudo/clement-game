@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boutique - Ultimate Challenge</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="boutique.css">
+</head>
+<body class="boutique-page">
+  <a href="pintro.html" class="back-home" data-i18n="back">← Retour</a>
+  <div class="boutique-starcoin-badge" id="boutiqueStarcoinBadge">💎 0</div>
+
+  <h1 class="boutique-title" data-i18n="boutique">Boutique</h1>
+
+  <div class="boutique-layout">
+    <main class="boutique-main">
+      <section class="boutique-category-content" id="categoryContent">
+        <!-- Option 1 : Joueur de foot (contenu identique à boutiquefoot.html pour faciliter la recherche) -->
+        <div class="boutique-category-panel active" id="panel-joueur-foot" data-category="joueur-foot">
+          <h2 class="boutique-category-title">Pack classic</h2>
+          <p class="boutique-category-desc">Achète un pack : tu gagnes un joueur au hasard dans la fourchette OVR. <a href="joueurs-collection.html" style="color: #f0c14b; font-weight: 600;">Voir la collection</a> · <a href="macompo.html" style="color: #f0c14b; font-weight: 600;">Ma composition</a></p>
+          <div class="boutique-packs">
+            <button type="button" class="boutique-pack" data-price="55000" data-min="79" data-max="84" data-ovr="79–84">
+              <span class="boutique-pack-price">55 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">79–84</span>
+            </button>
+            <button type="button" class="boutique-pack" data-price="75000" data-min="81" data-max="86" data-ovr="81–86">
+              <span class="boutique-pack-price">75 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">81–86</span>
+            </button>
+            <button type="button" class="boutique-pack" data-price="90000" data-min="84" data-max="88" data-ovr="84–88">
+              <span class="boutique-pack-price">90 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">84–88</span>
+            </button>
+            <button type="button" class="boutique-pack" data-price="80000" data-min="79" data-max="88" data-ovr="79–88">
+              <span class="boutique-pack-price">80 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">79–88</span>
+            </button>
+            <button type="button" class="boutique-pack" data-price="100000" data-min="85" data-max="90" data-ovr="85–90">
+              <span class="boutique-pack-price">100 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">85–90</span>
+            </button>
+            <button type="button" class="boutique-pack" data-price="150000" data-min="89" data-max="95" data-ovr="89–95">
+              <span class="boutique-pack-price">150 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">89–95</span>
+            </button>
+            <button type="button" class="boutique-pack" data-price="175000" data-min="89" data-max="99" data-ovr="89–99">
+              <span class="boutique-pack-price">175 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">89–99</span>
+            </button>
+            <button type="button" class="boutique-pack" data-price="200000" data-min="91" data-max="99" data-ovr="91–99">
+              <span class="boutique-pack-price">200 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">91–99</span>
+            </button>
+            <button type="button" class="boutique-pack" data-price="250000" data-min="94" data-max="99" data-ovr="94–99">
+              <span class="boutique-pack-price">250 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">94–99</span>
+            </button>
+            <button type="button" class="boutique-pack" data-price="300000" data-min="96" data-max="99" data-ovr="96–99">
+              <span class="boutique-pack-price">300 000 <span class="boutique-pack-currency">💎</span></span>
+              <span class="boutique-pack-ovr">96–99</span>
+            </button>
+          </div>
+        </div>
+        <div class="boutique-category-panel" id="panel-option2" data-category="option2" hidden>
+          <h2 class="boutique-category-title">Monuments</h2>
+          <p class="boutique-category-desc">Collectionne les monuments emblématiques du monde. <a href="boutiquemonument.html" style="color: #f0c14b; font-weight: 600;">Voir la collection monument</a></p>
+        </div>
+        <div class="boutique-category-panel" id="panel-option3" data-category="option3" hidden>
+          <h2 class="boutique-category-title">Option 3</h2>
+          <p class="boutique-category-desc">Bientôt disponible.</p>
+        </div>
+        <div class="boutique-category-panel" id="panel-option4" data-category="option4" hidden>
+          <h2 class="boutique-category-title">Option 4</h2>
+          <p class="boutique-category-desc">Bientôt disponible.</p>
+        </div>
+        <div class="boutique-category-panel" id="panel-option5" data-category="option5" hidden>
+          <h2 class="boutique-category-title">Option 5</h2>
+          <p class="boutique-category-desc">Bientôt disponible.</p>
+        </div>
+      </section>
+    </main>
+
+    <aside class="boutique-sidebar">
+      <nav class="boutique-options">
+        <button type="button" class="boutique-option active" data-category="joueur-foot" aria-current="true">
+          <span class="boutique-option-icon">⚽</span>
+          <span class="boutique-option-label">Joueur de foot</span>
+        </button>
+        <a href="boutiquemonument.html" class="boutique-option" data-category="option2">
+          <span class="boutique-option-icon">🏛️</span>
+          <span class="boutique-option-label">Monuments</span>
+        </a>
+        <button type="button" class="boutique-option" data-category="option3" disabled>
+          <span class="boutique-option-icon">—</span>
+          <span class="boutique-option-label">Option 3</span>
+        </button>
+        <button type="button" class="boutique-option" data-category="option4" disabled>
+          <span class="boutique-option-icon">—</span>
+          <span class="boutique-option-label">Option 4</span>
+        </button>
+        <button type="button" class="boutique-option" data-category="option5" disabled>
+          <span class="boutique-option-icon">—</span>
+          <span class="boutique-option-label">Option 5</span>
+        </button>
+      </nav>
+    </aside>
+  </div>
+
+  <!-- Modale confirmation paiement -->
+  <div class="boutique-modal" id="confirmModal" aria-hidden="true">
+    <div class="boutique-modal-box">
+      <h2 class="boutique-modal-title">Confirmer le paiement</h2>
+      <p class="boutique-modal-text" id="confirmModalText">Payer 25 000 💎 pour un pack OVR 82–86 ?</p>
+      <div class="boutique-modal-btns">
+        <button type="button" class="boutique-modal-btn boutique-modal-btn-cancel" id="confirmCancel">Annuler</button>
+        <button type="button" class="boutique-modal-btn boutique-modal-btn-pay" id="confirmPay">Payer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay animation ouverture pack (5 sec) -->
+  <div class="boutique-open-overlay" id="openOverlay" aria-hidden="true">
+    <div class="boutique-open-content">
+      <div class="boutique-open-card" id="openCard"></div>
+      <p class="boutique-open-text" id="openText">Ouverture du pack…</p>
+      <div class="boutique-open-progress"><span class="boutique-open-progress-bar" id="openProgressBar"></span></div>
+    </div>
+  </div>
+
+  <!-- Modale résultat : joueur gagné -->
+  <div class="boutique-modal" id="resultModal" aria-hidden="true">
+    <div class="boutique-modal-box boutique-result-box">
+      <h2 class="boutique-modal-title">Tu as obtenu</h2>
+      <div class="boutique-result-card-wrap" id="resultCardWrap">
+        <img class="boutique-result-card-img" id="resultCardImg" src="" alt="" />
+      </div>
+      <p class="boutique-result-player" id="resultPlayer"></p>
+      <button type="button" class="boutique-modal-btn boutique-modal-btn-ok" id="resultOk">OK</button>
+    </div>
+  </div>
+
+  <script src="lang.js"></script>
+  <script src="joueurs-data.js"></script>
+  <script src="boutiquefoot.js"></script>
+  <script>
+    (function() {
+      var options = document.querySelectorAll('.boutique-option:not([disabled])');
+      var panels = document.querySelectorAll('.boutique-category-panel');
+      options.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var cat = this.getAttribute('data-category');
+          options.forEach(function(b) { b.classList.remove('active'); b.removeAttribute('aria-current'); });
+          this.classList.add('active'); this.setAttribute('aria-current', 'true');
+          panels.forEach(function(p) {
+            if (p.getAttribute('data-category') === cat) {
+              p.classList.add('active'); p.hidden = false;
+            } else {
+              p.classList.remove('active'); p.hidden = true;
+            }
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

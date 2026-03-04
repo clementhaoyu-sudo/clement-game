@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jeux de chance et stratégie - CLEMENT GAME SAISON 1</title>
+  <title>Jeux de chance et stratégie - Ultimate Challenge SAISON 1</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="j3.css">
 </head>
@@ -21,7 +21,7 @@
   <div class="j3-rules-modal j3-confirm-buy-modal hidden" id="j3ConfirmBuyModal">
     <div class="j3-rules-box">
       <h2 class="j3-rules-title" id="j3ConfirmBuyTitle">Confirmer l'achat</h2>
-      <p class="j3-rules-text" id="j3ConfirmBuyText">Un bonhomme test coûte 10 000 ⭐. Il révélera la case sûre d'une rangée. Confirmer ?</p>
+      <p class="j3-rules-text" id="j3ConfirmBuyText">Un bonhomme test coûte 10 000 💎. Il révélera la case sûre d'une rangée. Confirmer ?</p>
       <div class="j3-confirm-buttons">
         <button type="button" class="j3-btn-cancel" id="j3ConfirmBuyCancel">Annuler</button>
         <button type="button" class="j3-btn-confirm" id="j3ConfirmBuyConfirm">Confirmer</button>
@@ -38,6 +38,24 @@
     </div>
   </div>
 
+  <!-- Modale bonhomme test a traversé -->
+  <div class="j3-rules-modal hidden" id="j3DummySuccessModal">
+    <div class="j3-rules-box">
+      <h2 class="j3-rules-title" id="j3DummySuccessTitle">Bonhomme test</h2>
+      <p class="j3-rules-text" id="j3DummySuccessText">Le bonhomme test a traversé le pont ! Tu as vu le parcours. À toi de jouer.</p>
+      <button type="button" class="j3-btn-start" id="j3DummySuccessBtn">OK</button>
+    </div>
+  </div>
+
+  <!-- Modale victoire : tu fais partie de l'élite -->
+  <div class="j3-rules-modal hidden" id="j3EliteModal">
+    <div class="j3-rules-box">
+      <h2 class="j3-rules-title" id="j3EliteTitle">Tu fais partie de l'élite !</h2>
+      <p class="j3-rules-text" id="j3EliteText"></p>
+      <a href="index.html" class="j3-btn-start" id="j3EliteBtn">Retour à l'accueil</a>
+    </div>
+  </div>
+
   <!-- Modale passer l'épreuve (code 1428) -->
   <div class="j3-skip-modal hidden" id="j3SkipModal">
     <div class="j3-rules-box">
@@ -50,22 +68,25 @@
 
   <button type="button" class="j3-skip-link" id="j3SkipLink">Passer l'épreuve</button>
 
-  <div class="j3-starcoin-badge" id="j3StarcoinBadge">⭐ 0</div>
+  <div class="j3-starcoin-badge" id="j3StarcoinBadge">💎 0</div>
 
-  <h1>CLEMENT GAME SAISON 1</h1>
+  <h1>Ultimate Challenge SAISON 1</h1>
   <p class="j3-subtitle" id="j3Subtitle">Jeux de chance et stratégie</p>
 
   <p class="j3-row-label" id="j3RowLabel">Rangée 1 / 7</p>
 
   <div class="j3-bridge" id="j3Bridge">
-    <div class="j3-row" id="j3RowCurrent">
-      <button type="button" class="j3-tile j3-tile-left" id="j3TileLeft" data-col="0">Gauche</button>
-      <button type="button" class="j3-tile j3-tile-right" id="j3TileRight" data-col="1">Droite</button>
-    </div>
+    <div class="j3-row" data-row="0"><button type="button" class="j3-tile j3-tile-left" data-col="0">Gauche</button><button type="button" class="j3-tile j3-tile-right" data-col="1">Droite</button></div>
+    <div class="j3-row" data-row="1"><button type="button" class="j3-tile j3-tile-left" data-col="0">Gauche</button><button type="button" class="j3-tile j3-tile-right" data-col="1">Droite</button></div>
+    <div class="j3-row" data-row="2"><button type="button" class="j3-tile j3-tile-left" data-col="0">Gauche</button><button type="button" class="j3-tile j3-tile-right" data-col="1">Droite</button></div>
+    <div class="j3-row" data-row="3"><button type="button" class="j3-tile j3-tile-left" data-col="0">Gauche</button><button type="button" class="j3-tile j3-tile-right" data-col="1">Droite</button></div>
+    <div class="j3-row" data-row="4"><button type="button" class="j3-tile j3-tile-left" data-col="0">Gauche</button><button type="button" class="j3-tile j3-tile-right" data-col="1">Droite</button></div>
+    <div class="j3-row" data-row="5"><button type="button" class="j3-tile j3-tile-left" data-col="0">Gauche</button><button type="button" class="j3-tile j3-tile-right" data-col="1">Droite</button></div>
+    <div class="j3-row" data-row="6"><button type="button" class="j3-tile j3-tile-left" data-col="0">Gauche</button><button type="button" class="j3-tile j3-tile-right" data-col="1">Droite</button></div>
   </div>
 
   <div class="j3-dummy-actions">
-    <button type="button" class="j3-btn-dummy j3-btn-buy" id="j3BtnBuyDummy" disabled>Bonhomme test (10 000 ⭐)</button>
+    <button type="button" class="j3-btn-dummy j3-btn-buy" id="j3BtnBuyDummy" disabled>Bonhomme test (10 000 💎)</button>
     <button type="button" class="j3-btn-dummy j3-btn-use hidden" id="j3BtnUseDummy">Utiliser le bonhomme test</button>
   </div>
   <p class="j3-dummy-count" id="j3DummyCount"></p>
@@ -80,6 +101,7 @@
   </div>
 
   <script src="lang.js"></script>
+  <script src="textes-modales.js"></script>
   <script src="j3.js"></script>
 </body>
 </html>

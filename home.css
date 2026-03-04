@@ -53,6 +53,17 @@
   box-shadow: 0 6px 20px rgba(42, 157, 143, 0.5);
 }
 
+.bonus-btn-fixed-2 {
+  left: auto;
+  right: 1rem;
+  background: linear-gradient(145deg, #6a4c93, #5a3d7a);
+  box-shadow: 0 4px 14px rgba(106, 76, 147, 0.4);
+}
+
+.bonus-btn-fixed-2:hover {
+  box-shadow: 0 6px 20px rgba(106, 76, 147, 0.5);
+}
+
 .settings-wrap {
   position: fixed;
   top: 1rem;
@@ -120,6 +131,18 @@
   background: rgba(255,255,255,0.08);
   color: #eee;
   cursor: pointer;
+}
+
+.settings-createur-link {
+  display: block;
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+  color: #f0c14b;
+  text-decoration: none;
+}
+
+.settings-createur-link:hover {
+  text-decoration: underline;
 }
 
 .home-title {

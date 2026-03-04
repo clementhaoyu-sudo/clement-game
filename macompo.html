@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma composition - Ultimate Challenge</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="boutique.css">
+  <style>
+    .macompo-page { justify-content: flex-start; padding-top: 3rem; padding-bottom: 2rem; }
+    .macompo-title { font-size: 1.8rem; margin-bottom: 0.5rem; text-align: center; }
+    .macompo-desc { font-size: 0.95rem; opacity: 0.85; margin-bottom: 1.5rem; text-align: center; }
+    .macompo-nav { margin-bottom: 1.5rem; text-align: center; }
+    .macompo-nav a { color: #f0c14b; text-decoration: none; font-weight: 600; margin: 0 0.5rem; }
+    .macompo-nav a:hover { text-decoration: underline; }
+    .macompo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; max-width: 560px; margin: 0 auto; }
+    .macompo-card { text-align: center; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.12); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; }
+    .macompo-card:hover { border-color: #f0c14b; box-shadow: 0 0 0 2px rgba(240,193,75,0.3); }
+    .macompo-card.macompo-card-key { border-color: #f0c14b; box-shadow: 0 0 0 2px rgba(240,193,75,0.4); }
+    .macompo-card img { width: 100%; height: auto; border-radius: 8px; display: block; }
+    .macompo-empty { text-align: center; padding: 2rem; opacity: 0.8; }
+    .macompo-cles-title { font-size: 1.1rem; font-weight: 700; color: #f0c14b; margin-bottom: 0.75rem; text-align: center; }
+    .macompo-cles-desc { font-size: 0.9rem; opacity: 0.85; margin-bottom: 1rem; text-align: center; }
+    .macompo-cles-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; max-width: 400px; margin: 0 auto 2rem; }
+    .macompo-slot { position: relative; aspect-ratio: 2/3; background: rgba(255,255,255,0.06); border: 2px dashed rgba(255,255,255,0.25); border-radius: 12px; display: flex; align-items: center; justify-content: center; min-height: 100px; cursor: pointer; transition: border-color 0.2s, background 0.2s; overflow: hidden; }
+    .macompo-slot:hover { border-color: rgba(240,193,75,0.6); background: rgba(255,255,255,0.08); }
+    .macompo-slot.drag-over { border-color: #f0c14b; background: rgba(240,193,75,0.15); }
+    .macompo-card.dragging { opacity: 0.5; cursor: grabbing; }
+    .macompo-card[draggable="true"] { cursor: grab; }
+    .macompo-slot-placeholder { font-size: 0.85rem; opacity: 0.6; text-align: center; padding: 0.5rem; }
+    .macompo-slot img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 8px; display: block; }
+    .macompo-cles-remove-zone { margin: 0 auto 2rem; max-width: 400px; padding: 1rem; border: 2px dashed rgba(255,255,255,0.2); border-radius: 12px; text-align: center; font-size: 0.9rem; opacity: 0.8; transition: border-color 0.2s, background 0.2s; min-height: 56px; display: flex; align-items: center; justify-content: center; }
+    .macompo-cles-remove-zone.drag-over { border-color: #e57373; background: rgba(229,115,115,0.15); opacity: 1; }
+    .macompo-collection-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; text-align: center; }
+  </style>
+</head>
+<body class="boutique-page macompo-page">
+  <a href="pintro.html" class="back-home">← Retour</a>
+  <a href="boutiquefoot.html" class="boutique-starcoin-badge" style="text-decoration: none; color: inherit;">Boutique</a>
+
+  <h1 class="macompo-title">Ma composition</h1>
+  <p class="macompo-desc">Choisis tes 5 cartes clés en haut, puis consulte toute ta collection en dessous.</p>
+  <nav class="macompo-nav">
+    <a href="boutiquefoot.html">Boutique foot</a>
+    <a href="joueurs-collection.html">Voir la collection</a>
+  </nav>
+
+  <h2 class="macompo-cles-title">Mes 5 cartes clés</h2>
+  <p class="macompo-cles-desc">Glisse une carte de ta collection vers un emplacement ci-dessus pour en faire une carte clé. Glisse une carte clé <strong>vers le bas</strong> dans la zone ci‑dessous pour l’enlever des cartes clés.</p>
+  <div class="macompo-cles-grid" id="macompoClesGrid"></div>
+  <div class="macompo-cles-remove-zone" id="macompoClesRemoveZone">↓ Glisser une carte clé ici pour l’enlever</div>
+
+  <h2 class="macompo-collection-title">Ta collection</h2>
+  <div id="macompoRoot" class="boutique-main"></div>
+  <p id="macompoEmpty" class="macompo-empty" style="display: none;">Aucune carte pour l’instant. Achète des packs pour en gagner.</p>
+
+  <script>
+    (function() {
+      var KEY = 'clement-macompo';
+      var KEY_CLES = 'clement-macompo-cles';
+      var root = document.getElementById('macompoRoot');
+      var emptyEl = document.getElementById('macompoEmpty');
+      var clesGrid = document.getElementById('macompoClesGrid');
+      var clesRemoveZone = document.getElementById('macompoClesRemoveZone');
+      var isDragging = false;
+      if (!root) return;
+
+      function getDetailUrl(card) {
+        if (!card) return 'carte-detail.html';
+        var q = '?image=' + encodeURIComponent(card.image || '') + '&name=' + encodeURIComponent(card.name || '') + '&ovr=' + encodeURIComponent(card.ovr != null ? String(card.ovr) : '');
+        return 'carte-detail.html' + q;
+      }
+
+      document.addEventListener('dragend', function() { isDragging = false; });
+
+      var raw = localStorage.getItem(KEY);
+      var list = [];
+      try {
+        if (raw) list = JSON.parse(raw);
+      } catch (e) {}
+      if (!Array.isArray(list)) list = [];
+
+      var rawCles = localStorage.getItem(KEY_CLES);
+      var cles = [ null, null, null, null, null ];
+      try {
+        if (rawCles) {
+          var parsed = JSON.parse(rawCles);
+          if (Array.isArray(parsed)) {
+            for (var qi = 0; qi < Math.min(5, parsed.length); qi++) {
+              var v = parsed[qi];
+              if (typeof v === 'number' && v >= 0 && v < list.length) {
+                cles[qi] = v;
+              } else if (v && typeof v === 'object' && v.image) {
+                var found = -1;
+                for (var fi = 0; fi < list.length; fi++) {
+                  if (list[fi].image === v.image) { found = fi; break; }
+                }
+                cles[qi] = found >= 0 ? found : null;
+              }
+            }
+          }
+        }
+      } catch (e) {}
+      while (cles.length < 5) cles.push(null);
+
+      function saveCles() {
+        try { localStorage.setItem(KEY_CLES, JSON.stringify(cles)); } catch (e) {}
+        renderAll();
+      }
+
+      function indexInCles(idx) {
+        for (var k = 0; k < 5; k++) {
+          if (cles[k] === idx) return k;
+        }
+        return -1;
+      }
+
+      function renderCles() {
+        if (!clesGrid) return;
+        clesGrid.innerHTML = '';
+        for (var i = 0; i < 5; i++) {
+          var slot = document.createElement('div');
+          slot.className = 'macompo-slot';
+          slot.setAttribute('data-slot', i);
+          slot.setAttribute('data-drop', 'slot');
+          var idx = cles[i];
+          if (idx != null && list[idx]) {
+            var c = list[idx];
+            var img = document.createElement('img');
+            img.src = c.image || '';
+            img.alt = c.name || '';
+            img.draggable = true;
+            img.setAttribute('data-from-slot', i);
+            img.setAttribute('data-list-index', idx);
+            slot.appendChild(img);
+            slot.title = 'Cliquer pour la fiche · Glisser pour retirer';
+            (function(card) {
+              slot.addEventListener('click', function(ev) {
+                if (isDragging) return;
+                ev.preventDefault();
+                window.location = getDetailUrl(card);
+              });
+            })(c);
+          } else {
+            var ph = document.createElement('span');
+            ph.className = 'macompo-slot-placeholder';
+            ph.textContent = (i + 1);
+            slot.appendChild(ph);
+            slot.title = 'Glisser une carte ici';
+          }
+          setupSlotDrop(slot, i);
+          clesGrid.appendChild(slot);
+        }
+      }
+
+      function setupSlotDrop(slot, slotIndex) {
+        slot.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          slot.classList.add('drag-over');
+        });
+        slot.addEventListener('dragleave', function() {
+          slot.classList.remove('drag-over');
+        });
+        slot.addEventListener('drop', function(e) {
+          e.preventDefault();
+          slot.classList.remove('drag-over');
+          var fromSlot = e.dataTransfer.getData('application/x-slot');
+          if (fromSlot !== '' && fromSlot != null) {
+            var fs = parseInt(fromSlot, 10);
+            if (!isNaN(fs) && fs >= 0 && fs < 5) cles[fs] = null;
+          }
+          var listIndex = e.dataTransfer.getData('text/plain');
+          if (listIndex === '') return;
+          listIndex = parseInt(listIndex, 10);
+          if (isNaN(listIndex) || listIndex < 0 || listIndex >= list.length) return;
+          if (indexInCles(listIndex) >= 0 && cles[slotIndex] !== listIndex) return;
+          cles[slotIndex] = listIndex;
+          saveCles();
+        });
+      }
+
+      function renderCollection() {
+        root.innerHTML = '';
+        var indicesInCles = {};
+        for (var k = 0; k < 5; k++) {
+          if (cles[k] != null) indicesInCles[cles[k]] = true;
+        }
+        var shown = 0;
+        var grid = document.createElement('div');
+        grid.className = 'macompo-grid';
+        grid.setAttribute('data-drop', 'collection');
+        list.forEach(function(p, idx) {
+          if (indicesInCles[idx]) return;
+          shown++;
+          var card = document.createElement('div');
+          card.className = 'macompo-card';
+          card.draggable = true;
+          card.setAttribute('data-list-index', idx);
+          var img = document.createElement('img');
+          img.src = p.image || '';
+          img.alt = '';
+          img.loading = 'lazy';
+          img.draggable = false;
+          card.appendChild(img);
+          card.title = 'Cliquer pour la fiche · Glisser vers un emplacement carte clé';
+          card.addEventListener('dragstart', function(ev) {
+            isDragging = true;
+            ev.dataTransfer.setData('text/plain', String(idx));
+            ev.dataTransfer.effectAllowed = 'move';
+            card.classList.add('dragging');
+          });
+          card.addEventListener('dragend', function() {
+            card.classList.remove('dragging');
+          });
+          card.addEventListener('click', function(ev) {
+            if (isDragging) return;
+            ev.preventDefault();
+            window.location = getDetailUrl(p);
+          });
+          grid.appendChild(card);
+        });
+        root.appendChild(grid);
+        grid.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+        });
+        grid.addEventListener('drop', function(e) {
+          e.preventDefault();
+          var fromSlot = e.dataTransfer.getData('application/x-slot');
+          if (fromSlot === '') return;
+          fromSlot = parseInt(fromSlot, 10);
+          if (!isNaN(fromSlot) && fromSlot >= 0 && fromSlot < 5) {
+            cles[fromSlot] = null;
+            saveCles();
+          }
+        });
+
+        if (shown === 0 && list.length > 0) {
+          if (emptyEl) emptyEl.style.display = 'block';
+          emptyEl.textContent = 'Toutes tes cartes sont dans les emplacements clés. Glisse-en une vers la collection pour la retirer.';
+        } else if (list.length === 0) {
+          if (emptyEl) {
+            emptyEl.style.display = 'block';
+            emptyEl.textContent = 'Aucune carte pour l\'instant. Achète des packs pour en gagner.';
+          }
+        } else {
+          if (emptyEl) emptyEl.style.display = 'none';
+        }
+      }
+
+      function renderAll() {
+        renderCles();
+        renderCollection();
+      }
+
+      renderAll();
+
+      if (clesRemoveZone) {
+        clesRemoveZone.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          clesRemoveZone.classList.add('drag-over');
+        });
+        clesRemoveZone.addEventListener('dragleave', function() {
+          clesRemoveZone.classList.remove('drag-over');
+        });
+        clesRemoveZone.addEventListener('drop', function(e) {
+          e.preventDefault();
+          clesRemoveZone.classList.remove('drag-over');
+          var fromSlot = e.dataTransfer.getData('application/x-slot');
+          if (fromSlot === '' || fromSlot == null) return;
+          var fs = parseInt(fromSlot, 10);
+          if (!isNaN(fs) && fs >= 0 && fs < 5) {
+            cles[fs] = null;
+            saveCles();
+          }
+        });
+      }
+
+      if (clesGrid) {
+        clesGrid.addEventListener('dragstart', function(ev) {
+          isDragging = true;
+          var img = ev.target;
+          if (img.tagName !== 'IMG') return;
+          var slot = img.closest('.macompo-slot');
+          if (!slot) return;
+          var slotIdx = slot.getAttribute('data-slot');
+          var listIdx = img.getAttribute('data-list-index');
+          if (slotIdx != null) {
+            ev.dataTransfer.setData('application/x-slot', slotIdx);
+            ev.dataTransfer.effectAllowed = 'move';
+          }
+          if (listIdx != null) ev.dataTransfer.setData('text/plain', listIdx);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

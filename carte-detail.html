@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche carte - Ultimate Challenge</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="boutique.css">
+  <style>
+    .carte-detail-page { min-height: 100vh; padding: 2rem; box-sizing: border-box; }
+    .carte-detail-back { display: inline-block; margin-bottom: 1.5rem; color: #f0c14b; text-decoration: none; font-weight: 600; }
+    .carte-detail-back:hover { text-decoration: underline; }
+    .carte-detail-layout { display: flex; flex-wrap: wrap; gap: 2rem; max-width: 900px; margin: 0 auto; align-items: flex-start; }
+    .carte-detail-image-wrap { flex: 0 0 280px; max-width: 100%; }
+    .carte-detail-image-wrap img { width: 100%; height: auto; border-radius: 16px; display: block; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .carte-detail-content { flex: 1 1 320px; min-width: 0; }
+    .carte-detail-name { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; color: #fff; }
+    .carte-detail-ovr { font-size: 1.1rem; color: #f0c14b; margin-bottom: 1.5rem; }
+    .carte-detail-section { margin-bottom: 1.5rem; }
+    .carte-detail-section h3 { font-size: 1rem; font-weight: 700; color: #f0c14b; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .carte-detail-section p { font-size: 0.95rem; line-height: 1.5; color: rgba(255,255,255,0.9); margin: 0; }
+    .carte-detail-line { margin: 0; }
+    .carte-detail-empty { color: rgba(255,255,255,0.5); font-style: italic; }
+    @media (max-width: 640px) {
+      .carte-detail-layout { flex-direction: column; align-items: center; }
+      .carte-detail-image-wrap { max-width: 260px; }
+    }
+  </style>
+</head>
+<body class="boutique-page carte-detail-page">
+  <a href="#" class="carte-detail-back" id="carteDetailBack">← Retour</a>
+
+  <div class="carte-detail-layout">
+    <div class="carte-detail-image-wrap">
+      <img id="carteDetailImg" src="" alt="" />
+    </div>
+    <div class="carte-detail-content">
+      <h1 class="carte-detail-name" id="carteDetailName">—</h1>
+      <p class="carte-detail-ovr" id="carteDetailOvr"></p>
+      <div class="carte-detail-section">
+        <h3>Nom complet</h3>
+        <p id="carteDetailNomComplet" class="carte-detail-line">—</p>
+      </div>
+      <div class="carte-detail-section">
+        <h3>Trophées</h3>
+        <p id="carteDetailTrophees" class="carte-detail-line">—</p>
+      </div>
+      <div class="carte-detail-section">
+        <h3>Taille</h3>
+        <p id="carteDetailTaille" class="carte-detail-line">—</p>
+      </div>
+      <div class="carte-detail-section">
+        <h3>Poids</h3>
+        <p id="carteDetailPoids" class="carte-detail-line">—</p>
+      </div>
+      <div class="carte-detail-section">
+        <h3>Pied fort</h3>
+        <p id="carteDetailPiedFort" class="carte-detail-line">—</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="joueurs-data.js"></script>
+  <script src="descriptions-joueurs.js"></script>
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var image = params.get('image') || '';
+      var name = params.get('name') || '';
+      var ovr = params.get('ovr') || '';
+
+      var imgEl = document.getElementById('carteDetailImg');
+      var nameEl = document.getElementById('carteDetailName');
+      var ovrEl = document.getElementById('carteDetailOvr');
+      var nomCompletEl = document.getElementById('carteDetailNomComplet');
+      var tropheesEl = document.getElementById('carteDetailTrophees');
+      var tailleEl = document.getElementById('carteDetailTaille');
+      var poidsEl = document.getElementById('carteDetailPoids');
+      var piedFortEl = document.getElementById('carteDetailPiedFort');
+      var backEl = document.getElementById('carteDetailBack');
+
+      var desc = null;
+      if (typeof window.JOUEURS_DESCRIPTIONS === 'object' && window.JOUEURS_DESCRIPTIONS && name) {
+        desc = window.JOUEURS_DESCRIPTIONS[name] || window.JOUEURS_DESCRIPTIONS[image];
+      }
+
+      if (imgEl) imgEl.src = image || '';
+      if (imgEl) imgEl.alt = name;
+      if (nameEl) nameEl.textContent = name || '—';
+      if (ovrEl) ovrEl.textContent = ovr ? 'OVR ' + ovr : '';
+
+      function setLine(el, value, emptyClass) {
+        if (!el) return;
+        el.textContent = value || '—';
+        if (!value) el.classList.add(emptyClass || 'carte-detail-empty');
+        else el.classList.remove('carte-detail-empty');
+      }
+
+      setLine(nomCompletEl, desc && desc.nomComplet ? desc.nomComplet : name || null);
+      if (tropheesEl) {
+        var tropheesText = null;
+        if (desc) {
+          var nb = desc.nbTrophees != null ? desc.nbTrophees : (desc.tropheesListe ? desc.tropheesListe.length : null);
+          var liste = desc.tropheesListe && desc.tropheesListe.length ? desc.tropheesListe.join(', ') : (desc.tropheesListeStr || '');
+          if (nb != null || liste) {
+            tropheesText = (nb != null ? nb + ' trophée(s)' : '') + (liste ? (nb != null ? ' — ' : '') + liste : '');
+          }
+        }
+        setLine(tropheesEl, tropheesText);
+      }
+      setLine(tailleEl, desc && desc.taille ? desc.taille : null);
+      setLine(poidsEl, desc && desc.poids ? desc.poids : null);
+      setLine(piedFortEl, desc && desc.piedFort ? desc.piedFort : null);
+
+      if (backEl) {
+        backEl.href = 'macompo.html';
+        backEl.addEventListener('click', function(ev) {
+          if (window.history.length > 1) {
+            ev.preventDefault();
+            window.history.back();
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CLEMENT GAME SAISON 1</title>
+  <title>Ultimate Challenge SAISON 1</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="home.css">
+  <audio id="indexThemeMusic" loop preload="auto">
+    <source src="audio/beast-game.mp3" type="audio/mpeg">
+  </audio>
 </head>
 <body class="home-page">
   <div class="counter-badge" id="counterBadge">0/5</div>
-  <div class="starcoin-badge" id="starcoinBadge">⭐ 0</div>
+  <div class="starcoin-badge" id="starcoinBadge">💎 0</div>
   <div class="settings-wrap">
     <button type="button" class="settings-btn" id="settingsBtn" aria-label="Settings" data-i18n="settings">Settings</button>
     <div class="settings-dropdown" id="settingsDropdown">
       <div class="settings-option">
-        <span class="settings-label" data-i18n="language">Language</span>
+        <span class="settings-label" data-i18n="language">Langue</span>
         <select id="langSelect" aria-label="Language">
           <option value="fr" data-i18n="lang_fr">Français</option>
           <option value="en" data-i18n="lang_en">English</option>
@@ -22,10 +25,14 @@
           <option value="zh" data-i18n="lang_zh">中文</option>
         </select>
       </div>
+      <div class="settings-option">
+        <span class="settings-label" id="settingsSoundLabel" data-i18n="settings_sound">Son</span>
+        <input type="checkbox" id="soundCheckbox" checked aria-label="Son">
+      </div>
     </div>
   </div>
 
-  <h1 class="home-title" id="homeTitle">CLEMENT GAME SAISON 1</h1>
+  <h1 class="home-title" id="homeTitle">Ultimate Challenge SAISON 1</h1>
 
   <!-- Modale rappel bonus (après retour de j2) -->
   <div class="code-modal bonus-reminder-modal" id="bonusReminderModal">
@@ -49,6 +56,9 @@
   <a href="jbonus.html" class="bonus-btn-fixed" id="gameBonusCard" style="display:none;">
     <span id="gameBonusCardTitle" data-i18n="game_bonus">Jeu bonus</span>
   </a>
+  <a href="jbonus2.html" class="bonus-btn-fixed bonus-btn-fixed-2" id="gameBonus2Card" style="display:none;">
+    <span id="gameBonus2CardTitle" data-i18n="game_bonus2">Quiz Histoire & Géo</span>
+  </a>
 
   <div class="games-grid">
     <a href="j1.html" class="game-card" id="game1Card">
@@ -68,6 +78,7 @@
   </div>
 
   <script src="lang.js"></script>
+  <script src="textes-modales.js"></script>
   <script>
     (function() {
       if (sessionStorage.getItem('clement-from-pintro') !== '1') {
@@ -97,7 +108,7 @@
       }
       function updateStarcoin() {
         var el = document.getElementById('starcoinBadge');
-        if (el) el.textContent = '⭐ ' + getStarcoin().toLocaleString('fr-FR');
+        if (el) el.textContent = '💎 0';
       }
       function updateCounter() {
         var n = parseInt(localStorage.getItem('clement-game-completed'), 10) || 0;
@@ -164,6 +175,11 @@
         var bonusUsed = localStorage.getItem('clement-bonus-used') === '1';
         if (bonusCard) bonusCard.style.display = (n >= 2 && !bonusUsed) ? 'flex' : 'none';
         if (bonusTitle && window.getText) bonusTitle.textContent = window.getText('game_bonus');
+        var bonus2Card = document.getElementById('gameBonus2Card');
+        var bonus2Title = document.getElementById('gameBonus2CardTitle');
+        var bonus2Used = localStorage.getItem('clement-bonus2-used') === '1';
+        if (bonus2Card) bonus2Card.style.display = (n >= 3 && !bonus2Used) ? 'flex' : 'none';
+        if (bonus2Title && window.getText) bonus2Title.textContent = window.getText('game_bonus2');
       }
 
       var saved = localStorage.getItem('clement-game-lang') || 'fr';
@@ -267,6 +283,44 @@
       });
 
       if (langSelect) langSelect.addEventListener('change', setCodeModalLang);
+
+      var indexMusic = document.getElementById('indexThemeMusic');
+      var soundCheckbox = document.getElementById('soundCheckbox');
+      var SOUND_KEY = 'clement-sound-enabled';
+
+      function isSoundEnabled() {
+        return localStorage.getItem(SOUND_KEY) !== '0';
+      }
+      function applySound() {
+        if (!indexMusic) return;
+        if (isSoundEnabled()) {
+          indexMusic.muted = false;
+          indexMusic.volume = 0.5;
+          indexMusic.play().catch(function() {});
+        } else {
+          indexMusic.muted = true;
+          indexMusic.pause();
+        }
+      }
+      if (soundCheckbox) {
+        soundCheckbox.checked = isSoundEnabled();
+        soundCheckbox.addEventListener('change', function() {
+          localStorage.setItem(SOUND_KEY, this.checked ? '1' : '0');
+          applySound();
+        });
+      }
+      if (indexMusic) {
+        indexMusic.volume = 0.5;
+        if (isSoundEnabled()) {
+          indexMusic.play().catch(function() {});
+          document.body.addEventListener('click', function startMusicOnce() {
+            if (indexMusic && isSoundEnabled()) indexMusic.play().catch(function() {});
+            document.body.removeEventListener('click', startMusicOnce);
+          }, { once: true });
+        } else {
+          indexMusic.muted = true;
+        }
+      }
     })();
   </script>
 </body>

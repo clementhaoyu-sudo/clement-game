@@ -1,6 +1,8 @@
 const COLORS = ['red', 'yellow', 'green', 'blue'];
 const BLOCK_INTERVAL_MS = 1000;
+const BLOCK_INTERVAL_EP2_MS = 1500;
 const HIDE_DELAY_MS = 1000;
+const HIDE_DELAY_EP2_MS = 5000;
 const EPREUVE_CONFIG = {
   1: { blocks: 5, timerSec: 30 },
   2: { blocks: 9, timerSec: 50 },
@@ -219,7 +221,7 @@ function evaluateAndShowResult(won, message) {
   }
 
   btnReplay.style.display = 'block';
-  btnReplay.textContent = t('j1_btn_exit');
+  btnReplay.textContent = t('btn_quit');
   btnReplay.onclick = function() { window.location.href = 'pintro.html'; };
   showResultOverlay(false, t('j1_result_lose'), message || '');
 }
@@ -248,12 +250,14 @@ async function showSequence() {
   hideAllBlocks();
   hideAllPlayerSelection();
 
+  const intervalMs = currentEpreuve === 2 ? BLOCK_INTERVAL_EP2_MS : BLOCK_INTERVAL_MS;
   for (let i = 0; i < sequence.length; i++) {
     showBlock(i, sequence[i]);
-    await new Promise((r) => setTimeout(r, BLOCK_INTERVAL_MS));
+    await new Promise((r) => setTimeout(r, intervalMs));
   }
 
-  await new Promise((r) => setTimeout(r, HIDE_DELAY_MS));
+  const hideDelayMs = currentEpreuve === 2 ? HIDE_DELAY_EP2_MS : HIDE_DELAY_MS;
+  await new Promise((r) => setTimeout(r, hideDelayMs));
   hideAllBlocks();
 
   gamePhase = 'playing';

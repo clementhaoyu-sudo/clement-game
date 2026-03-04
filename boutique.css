@@ -1,0 +1,362 @@
+/* Page Boutique */
+.boutique-page {
+  justify-content: flex-start;
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+}
+
+.boutique-title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.boutique-layout {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 2rem;
+  max-width: 1000px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+/* Colonne de droite : 5 options */
+.boutique-sidebar {
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.boutique-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.boutique-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.12s;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+a.boutique-option:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(-2px);
+  color: #fff;
+}
+
+.boutique-option:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(-2px);
+}
+
+.boutique-option.active {
+  background: rgba(67, 97, 238, 0.35);
+  border-color: rgba(67, 97, 238, 0.7);
+  color: #fff;
+}
+
+.boutique-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.boutique-option-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.boutique-option-label {
+  line-height: 1.3;
+}
+
+/* Zone principale */
+.boutique-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.boutique-category-panel {
+  display: none;
+}
+
+.boutique-category-panel.active {
+  display: block;
+}
+
+.boutique-category-title {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+  color: #eee;
+}
+
+.boutique-category-desc {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-bottom: 1.5rem;
+}
+
+/* Grille des packs (Joueur de foot) */
+.boutique-packs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.boutique-starcoin-badge {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #f0c14b;
+}
+
+.boutique-pack {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-family: inherit;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.boutique-pack:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.boutique-pack:active {
+  transform: scale(0.98);
+}
+
+.boutique-pack-price {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f0c14b;
+}
+
+.boutique-pack-currency {
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+.boutique-pack-ovr {
+  font-size: 0.95rem;
+  font-weight: 600;
+  opacity: 0.95;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Modales boutique */
+.boutique-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.boutique-modal.visible {
+  display: flex;
+}
+
+.boutique-modal-box {
+  background: linear-gradient(145deg, #1a1a2e, #16213e);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.boutique-modal-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #eee;
+}
+
+.boutique-modal-text {
+  font-size: 1rem;
+  opacity: 0.95;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.boutique-modal-btns {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.boutique-modal-btn {
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.boutique-modal-btn:hover {
+  transform: scale(1.03);
+}
+
+.boutique-modal-btn-cancel {
+  background: rgba(255, 255, 255, 0.15);
+  color: #eee;
+}
+
+.boutique-modal-btn-pay {
+  background: linear-gradient(145deg, #2a9d8f, #238276);
+  color: white;
+}
+
+.boutique-modal-btn-ok {
+  background: linear-gradient(145deg, #4361ee, #3a56d4);
+  color: white;
+  margin-top: 0.5rem;
+}
+
+.boutique-result-box .boutique-modal-title { margin-bottom: 0.5rem; }
+
+.boutique-result-card-wrap {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.boutique-result-card-img {
+  max-width: 100%;
+  width: 200px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(240, 193, 75, 0.4);
+}
+
+.boutique-result-player {
+  display: none;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #f0c14b;
+  margin: 0.75rem 0;
+}
+
+/* Overlay animation ouverture (5 s) */
+.boutique-open-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  background: rgba(0, 0, 0, 0.9);
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.boutique-open-overlay.visible {
+  display: flex;
+}
+
+.boutique-open-content {
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+}
+
+.boutique-open-card {
+  width: 120px;
+  height: 160px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(145deg, #2a2a4a, #1a1a2e);
+  border: 3px solid rgba(240, 193, 75, 0.5);
+  border-radius: 12px;
+  animation: boutique-card-pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes boutique-card-pulse {
+  50% { box-shadow: 0 0 30px rgba(240, 193, 75, 0.3); transform: scale(1.02); }
+}
+
+.boutique-open-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #eee;
+}
+
+.boutique-open-progress {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.boutique-open-progress-bar {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #f0c14b, #e6b800);
+  border-radius: 3px;
+}
+
+/* Responsive : sur petit écran, sidebar au-dessus */
+@media (max-width: 700px) {
+  .boutique-layout {
+    flex-direction: column;
+  }
+
+  .boutique-sidebar {
+    width: 100%;
+  }
+
+  .boutique-options {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .boutique-option {
+    flex: 1 1 140px;
+    justify-content: center;
+  }
+
+  .boutique-packs {
+    grid-template-columns: 1fr;
+  }
+}

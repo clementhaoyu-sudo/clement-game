@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jeux de timer - CLEMENT GAME SAISON 1</title>
+  <title>Jeux de timer - Ultimate Challenge SAISON 1</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="j2.css">
 </head>
@@ -32,6 +32,7 @@
     <div class="j2-rules-box">
       <h2 class="j2-rules-title" id="j2Ep2RulesTitle">Étape 2</h2>
       <p class="j2-rules-text" id="j2Ep2RulesText">Le chronomètre est invisible. Lance-le avec « Démarrer », puis arrête-le entre la 15e et la 17e seconde avec « Arrêter ». Si tu es en dehors de cette fenêtre, tu perds.</p>
+      <p class="j2-rules-extra" id="j2Ep2RulesExtra">Si tu perds, tu pourras retenter pour 5000 💎 ou passer l'épreuve pour 10000 💎 (après avoir échoué). Pour passer sans échouer, utilise le code.</p>
       <button type="button" class="btn-start" id="j2Ep2RulesBtn">Démarrer</button>
     </div>
   </div>
@@ -40,7 +41,7 @@
 
   <button type="button" class="j2-skip-link" id="j2SkipLink">Passer l'épreuve</button>
 
-  <h1>CLEMENT GAME SAISON 1</h1>
+  <h1>Ultimate Challenge SAISON 1</h1>
   <p class="j2-instruction" id="j2Instruction">Arrête le timer à 5 secondes (tolérance 0,05 s).</p>
 
   <!-- Étape 1 : timer visible -->
@@ -68,16 +69,34 @@
     </div>
   </div>
 
+  <!-- Modale confirmation paiement (retenter ou passer) -->
+  <div class="j2-rules-modal j2-skip-modal hidden" id="j2ConfirmPayModal">
+    <div class="j2-rules-box">
+      <h2 class="j2-rules-title" id="j2ConfirmPayTitle">Confirmer le paiement</h2>
+      <p class="j2-rules-text" id="j2ConfirmPayText"></p>
+      <div class="j2-confirm-pay-buttons">
+        <button type="button" class="j2-btn-cancel-pay" id="j2ConfirmPayCancel">Annuler</button>
+        <button type="button" class="j2-btn-confirm-pay" id="j2ConfirmPayConfirm">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
   <div class="j2-result-overlay" id="j2ResultOverlay">
     <div class="j2-result-box" id="j2ResultBox">
       <p class="j2-result-time" id="j2ResultTime"></p>
       <h2 id="j2ResultTitle"></h2>
       <a href="index.html" class="j2-btn-back" id="j2BtnBack">Retour à l'accueil</a>
-      <a href="pintro.html" class="j2-btn-back j2-btn-restart" id="j2BtnRestart" style="display:none;">Recommencer</a>
+      <div class="j2-lose-options" id="j2LoseOptions">
+        <a href="pintro.html" class="j2-btn-back j2-btn-restart" id="j2BtnRestart">Recommencer</a>
+        <button type="button" class="j2-btn-retry" id="j2BtnRetry">Retenter (5000 💎)</button>
+        <button type="button" class="j2-btn-pass" id="j2BtnPass">Passer l'épreuve (10 000 💎)</button>
+      </div>
+      <p class="j2-lose-notenough" id="j2LoseNotenough"></p>
     </div>
   </div>
 
   <script src="lang.js"></script>
+  <script src="textes-modales.js"></script>
   <script src="j2.js"></script>
 </body>
 </html>

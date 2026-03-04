@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz bonus Histoire & Géo - Ultimate Challenge SAISON 1</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="jbonus.css">
+</head>
+<body class="jbonus-page">
+  <a href="index.html" class="jbonus-back-home" id="jbonusBackHome" aria-label="Retour accueil">←</a>
+
+  <div class="jbonus-warning-overlay" id="jbonusWarningOverlay">
+    <div class="jbonus-warning-box">
+      <h2 id="jbonusWarningTitle">Attention</h2>
+      <p class="jbonus-warning-text" id="jbonusWarningText"></p>
+      <div class="jbonus-warning-btns">
+        <button type="button" class="jbonus-warning-btn" id="jbonusWarningBtn">Faire le bonus</button>
+        <a href="index.html" class="jbonus-btn-no-thanks" id="jbonusNoThanks">Non merci</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="jbonus-warning-overlay jbonus-continue-overlay" id="jbonusContinueOverlay" style="display:none;">
+    <div class="jbonus-warning-box">
+      <h2 id="jbonusContinueTitle">Mauvaise réponse</h2>
+      <p class="jbonus-warning-text" id="jbonusContinueText"></p>
+      <p class="jbonus-continue-error" id="jbonusContinueError"></p>
+      <div class="jbonus-continue-btns">
+        <button type="button" class="jbonus-warning-btn jbonus-btn-pay" id="jbonusContinuePay">Payer 20 000 💎</button>
+        <button type="button" class="jbonus-btn-exit-challenge" id="jbonusExitChallenge">Sortir du bonus mais continuer le challenge (20 000 💎)</button>
+        <a href="pintro.html" class="jbonus-btn-quit" id="jbonusContinueQuit">Quitter (retour pintro)</a>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="jbonus-title" id="jbonusTitle">Quiz bonus – Histoire & Géographie</h1>
+  <p class="jbonus-progress" id="jbonusProgress">Question 1 / 5</p>
+  <p class="jbonus-question" id="jbonusQuestion"></p>
+  <div class="jbonus-options" id="jbonusOptions"></div>
+
+  <div class="jbonus-result-overlay" id="jbonusResultOverlay">
+    <div class="jbonus-result-box" id="jbonusResultBox">
+      <h2 id="jbonusResultTitle"></h2>
+      <p class="jbonus-result-extra" id="jbonusResultExtra"></p>
+      <a href="index.html" class="jbonus-btn-back" id="jbonusBtnBack">Retour à l'accueil</a>
+    </div>
+  </div>
+
+  <script src="lang.js"></script>
+  <script src="textes-modales.js"></script>
+  <script src="bonus-questions.js"></script>
+  <script>
+    (function() {
+      var lang = localStorage.getItem('clement-game-lang') || 'fr';
+      if (window.setLang) window.setLang(lang);
+
+      function t(key) {
+        return (typeof window.getText === 'function' ? window.getText(key) : key);
+      }
+
+      var STARCOIN_KEY = 'clement-starcoin';
+      var REWARD = 100000;
+      var CONTINUE_COST = 20000;
+      var BONUS_USED_KEY = 'clement-bonus2-used';
+      var pool = (window.BONUS_QUESTIONS_HISTORY || []).slice();
+
+      function getStarcoin() {
+        return parseInt(localStorage.getItem(STARCOIN_KEY), 10) || 0;
+      }
+      function addStarcoin(n) {
+        var v = getStarcoin() + n;
+        localStorage.setItem(STARCOIN_KEY, String(v));
+        return v;
+      }
+      function deductStarcoin(n) {
+        var v = Math.max(0, getStarcoin() - n);
+        localStorage.setItem(STARCOIN_KEY, String(v));
+        return v;
+      }
+
+      if (pool.length < 5) {
+        pool = pool.concat(pool);
+        while (pool.length < 5 && window.BONUS_QUESTIONS_HISTORY) pool = pool.concat(window.BONUS_QUESTIONS_HISTORY);
+      }
+      function pickFive() {
+        var shuffled = pool.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = shuffled[i];
+          shuffled[i] = shuffled[j];
+          shuffled[j] = tmp;
+        }
+        return shuffled.slice(0, 5);
+      }
+
+      var currentFive = pickFive();
+      var currentIndex = 0;
+      var score = 0;
+
+      var titleEl = document.getElementById('jbonusTitle');
+      var progressEl = document.getElementById('jbonusProgress');
+      var questionEl = document.getElementById('jbonusQuestion');
+      var optionsEl = document.getElementById('jbonusOptions');
+      var overlay = document.getElementById('jbonusResultOverlay');
+      var resultBox = document.getElementById('jbonusResultBox');
+      var resultTitle = document.getElementById('jbonusResultTitle');
+      var resultExtra = document.getElementById('jbonusResultExtra');
+      var btnBack = document.getElementById('jbonusBtnBack');
+      var backHome = document.getElementById('jbonusBackHome');
+      var warningOverlay = document.getElementById('jbonusWarningOverlay');
+      var warningTitle = document.getElementById('jbonusWarningTitle');
+      var warningText = document.getElementById('jbonusWarningText');
+      var warningBtn = document.getElementById('jbonusWarningBtn');
+
+      if (titleEl) titleEl.textContent = t('jbonus_title_history');
+      if (btnBack) btnBack.textContent = t('jbonus_back');
+      if (backHome) backHome.setAttribute('aria-label', t('j1_back_aria'));
+      if (warningTitle) warningTitle.textContent = t('jbonus_warning_title');
+      if (warningText) warningText.textContent = t('jbonus_warning_text');
+      if (warningBtn) warningBtn.textContent = t('jbonus_warning_btn_start');
+      var noThanks = document.getElementById('jbonusNoThanks');
+      if (noThanks) noThanks.textContent = t('jbonus_warning_no_thanks');
+
+      function startQuiz() {
+        if (warningOverlay) warningOverlay.classList.add('hidden');
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        var q = currentFive[currentIndex];
+        if (!q) {
+          showResult();
+          return;
+        }
+        progressEl.textContent = t('jbonus_question_of') + ' ' + (currentIndex + 1) + t('jbonus_of');
+        questionEl.textContent = q.q;
+        optionsEl.innerHTML = '';
+        q.options.forEach(function(opt, i) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'jbonus-option';
+          btn.textContent = opt;
+          btn.dataset.index = String(i);
+          btn.addEventListener('click', function() {
+            var chosen = parseInt(btn.dataset.index, 10);
+            var correct = (chosen === q.correct);
+            if (correct) {
+              score++;
+              currentIndex++;
+              if (currentIndex >= 5) {
+                showResult();
+              } else {
+                renderQuestion();
+              }
+            } else {
+              showContinueModal();
+            }
+          });
+          optionsEl.appendChild(btn);
+        });
+      }
+
+      function showResult() {
+        var won = (score === 5);
+        resultBox.classList.remove('win', 'lose');
+        resultBox.classList.add(won ? 'win' : 'lose');
+        resultTitle.textContent = won ? t('jbonus_win_starcoin') : t('jbonus_lose_msg');
+        if (resultExtra) resultExtra.textContent = won ? ('+ ' + REWARD.toLocaleString('fr-FR') + ' Starcoins') : (score + ' / 5');
+        if (won) addStarcoin(REWARD);
+        try { localStorage.setItem(BONUS_USED_KEY, '1'); } catch (e) {}
+        if (btnBack) {
+          btnBack.href = 'index.html';
+          btnBack.textContent = t('jbonus_back');
+        }
+        overlay.classList.add('visible');
+      }
+
+      var continueOverlay = document.getElementById('jbonusContinueOverlay');
+      var continueText = document.getElementById('jbonusContinueText');
+      var continueError = document.getElementById('jbonusContinueError');
+      var continuePay = document.getElementById('jbonusContinuePay');
+      var continueExitChallenge = document.getElementById('jbonusExitChallenge');
+      var continueQuit = document.getElementById('jbonusContinueQuit');
+
+      function showContinueModal() {
+        if (continueText) continueText.textContent = t('jbonus_continue_msg');
+        if (continueError) { continueError.textContent = ''; continueError.style.display = 'none'; }
+        if (continueOverlay) continueOverlay.style.display = 'flex';
+      }
+
+      function hideContinueModal() {
+        if (continueOverlay) continueOverlay.style.display = 'none';
+      }
+
+      if (continuePay) {
+        continuePay.addEventListener('click', function() {
+          if (getStarcoin() < CONTINUE_COST) {
+            if (continueError) { continueError.textContent = t('jbonus_no_starcoins'); continueError.style.display = 'block'; }
+            return;
+          }
+          deductStarcoin(CONTINUE_COST);
+          score++;
+          hideContinueModal();
+          currentIndex++;
+          if (currentIndex >= 5) {
+            showResult();
+          } else {
+            renderQuestion();
+          }
+        });
+      }
+      if (continueExitChallenge) {
+        continueExitChallenge.addEventListener('click', function() {
+          if (getStarcoin() < CONTINUE_COST) {
+            if (continueError) { continueError.textContent = t('jbonus_no_starcoins'); continueError.style.display = 'block'; }
+            return;
+          }
+          deductStarcoin(CONTINUE_COST);
+          try { localStorage.setItem(BONUS_USED_KEY, '1'); } catch (e) {}
+          window.location.href = 'index.html';
+        });
+        continueExitChallenge.textContent = t('jbonus_exit_bonus_continue_challenge');
+      }
+      if (continueQuit) {
+        continueQuit.addEventListener('click', function(e) {
+          try { localStorage.setItem(BONUS_USED_KEY, '1'); } catch (err) {}
+        });
+        continueQuit.textContent = t('jbonus_quit_pintro');
+      }
+      if (continuePay) continuePay.textContent = t('jbonus_pay_5000');
+
+      if (warningBtn) warningBtn.addEventListener('click', startQuiz);
+    })();
+  </script>
+</body>
+</html>
