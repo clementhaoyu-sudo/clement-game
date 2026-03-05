@@ -111,3 +111,16 @@
 .pintro-btn-secondary:hover {
   background: rgba(255, 255, 255, 0.18);
 }
+
+.pintro-btn-game {
+  display: block;
+  margin-top: 1rem;
+  background: linear-gradient(145deg, #0d7a3e 0%, #0a5c2e 50%, #064d26 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 20px rgba(13, 122, 62, 0.45);
+}
+
+.pintro-btn-game:hover {
+  background: linear-gradient(145deg, #0f8f47 0%, #0d7a3e 50%, #0a5c2e 100%);
+  box-shadow: 0 6px 24px rgba(13, 122, 62, 0.55);
+}

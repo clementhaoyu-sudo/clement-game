@@ -21,12 +21,12 @@
     .rangement-section-title { font-size: 1.2rem; font-weight: 700; color: #f0c14b; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
     .rangement-fond-preview { width: 48px; height: 64px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); }
     .rangement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.75rem; }
-    .rangement-card { text-align: center; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 0.5rem; border: 1px solid rgba(255,255,255,0.12); cursor: grab; transition: border-color 0.2s; }
+    .rangement-card { text-align: center; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 0.5rem; border: 1px solid rgba(255,255,255,0.12); transition: border-color 0.2s; }
+    .rangement-card[draggable="true"] { cursor: grab; }
+    .rangement-card[draggable="false"] { cursor: default; }
     .rangement-card:hover { border-color: #f0c14b; }
     .rangement-card.dragging { opacity: 0.6; cursor: grabbing; }
-    .rangement-card img { width: 100%; height: auto; border-radius: 8px; display: block; margin-bottom: 0.35rem; pointer-events: none; }
-    .rangement-card-name { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .rangement-card-ovr { font-size: 0.75rem; color: #f0c14b; }
+    .rangement-card img { width: 100%; height: auto; border-radius: 8px; display: block; pointer-events: none; }
     .rangement-empty { font-size: 0.9rem; opacity: 0.6; padding: 0.75rem 0; }
     .rangement-fond-placeholder { width: 48px; height: 64px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: rgba(255,255,255,0.5); }
   </style>
@@ -35,8 +35,8 @@
   <a href="createur.html" class="rangement-back">← Retour créateur</a>
 
   <h1 class="rangement-title">Rangement par type de fond</h1>
-  <p class="rangement-intro">Les joueurs sont répartis automatiquement : ceux avec une note <strong>en dessous de 85</strong> vont dans <strong>Or texture</strong>, les autres dans les autres types. Tu peux déplacer une carte si tu veux. Clique sur « Enregistrer le rangement » pour garder tes changements.</p>
-  <div class="rangement-save-wrap">
+  <p class="rangement-intro" id="rangementIntro">Les joueurs sont répartis par type de fond. Le rangement n’est pas modifiable.</p>
+  <div class="rangement-save-wrap" id="rangementSaveWrap" style="display: none;">
     <button type="button" class="rangement-save-btn" id="rangementSaveBtn">Enregistrer le rangement</button>
     <p class="rangement-save-feedback" id="rangementSaveFeedback" style="display: none;"></p>
   </div>
@@ -47,8 +47,9 @@
   <script src="fonds-joueurs.js"></script>
   <script>
     (function() {
+      var RANGEMENT_VERROUILLE = true;
       var STORAGE_KEY = 'clement-rangement';
-      var FOND_TYPES = ['noir-or', 'bleu-cosmos', 'magenta-tots', 'blanc-cristal', 'or-texture'];
+      var FOND_TYPES = ['noir-or', 'bleu-cosmos', 'magenta-tots', 'blanc-cristal', 'or-texture', 'violet'];
       var FOND_KEYS = FOND_TYPES.concat('autre');
       var FOND_LABELS = {
         'noir-or': 'Noir & Or géométrique',
@@ -56,6 +57,7 @@
         'magenta-tots': 'Magenta / TOTS',
         'blanc-cristal': 'Blanc cristal',
         'or-texture': 'Or texture',
+        'violet': 'Violet',
         'autre': 'Autre'
       };
       var FOND_IMAGES = {
@@ -63,7 +65,9 @@
         'bleu-cosmos': 'assets/rangement/fond-bleu-cosmos.png',
         'magenta-tots': 'assets/rangement/fond-magenta-tots.png',
         'blanc-cristal': 'assets/rangement/fond-blanc-cristal.png',
-        'or-texture': 'assets/rangement/fond-or-texture.png'
+        'or-texture': 'assets/rangement/fond-or-texture.png',
+        'violet': 'assets/rangement/fond-violet.png',
+        'autre': 'assets/rangement/fond-autre.png'
       };
 
       var list = window.JOUEURS_COLLECTION || [];
@@ -120,49 +124,43 @@
       function makeCard(p) {
         var card = document.createElement('div');
         card.className = 'rangement-card';
-        card.draggable = true;
+        card.draggable = !RANGEMENT_VERROUILLE;
         card.setAttribute('data-image', p.image || '');
         var img = document.createElement('img');
         img.src = p.image || '';
         img.alt = p.name || '';
         img.loading = 'lazy';
         card.appendChild(img);
-        var name = document.createElement('div');
-        name.className = 'rangement-card-name';
-        name.textContent = p.name || '—';
-        card.appendChild(name);
-        var ovr = document.createElement('div');
-        ovr.className = 'rangement-card-ovr';
-        ovr.textContent = 'OVR ' + (p.ovr != null ? p.ovr : '—');
-        card.appendChild(ovr);
-        card.addEventListener('dragstart', function(e) {
-          e.dataTransfer.setData('text/plain', p.image || '');
-          e.dataTransfer.effectAllowed = 'move';
-          card.classList.add('dragging');
-        });
-        card.addEventListener('dragend', function() {
-          card.classList.remove('dragging');
-        });
-        card.addEventListener('dragover', function(e) {
-          e.preventDefault();
-          e.dataTransfer.dropEffect = 'move';
-          var sec = card.closest('.rangement-section');
-          if (sec) sec.classList.add('drag-over');
-        });
-        card.addEventListener('dragleave', function() {
-          var sec = card.closest('.rangement-section');
-          if (sec) sec.classList.remove('drag-over');
-        });
-        card.addEventListener('drop', function(e) {
-          e.preventDefault();
-          var sec = card.closest('.rangement-section');
-          if (sec) sec.classList.remove('drag-over');
-          var imagePath = e.dataTransfer.getData('text/plain');
-          if (!imagePath) return;
-          var fond = sec.getAttribute('data-fond');
-          mapping[imagePath] = fond;
-          render();
-        });
+        if (!RANGEMENT_VERROUILLE) {
+          card.addEventListener('dragstart', function(e) {
+            e.dataTransfer.setData('text/plain', p.image || '');
+            e.dataTransfer.effectAllowed = 'move';
+            card.classList.add('dragging');
+          });
+          card.addEventListener('dragend', function() {
+            card.classList.remove('dragging');
+          });
+          card.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            var sec = card.closest('.rangement-section');
+            if (sec) sec.classList.add('drag-over');
+          });
+          card.addEventListener('dragleave', function() {
+            var sec = card.closest('.rangement-section');
+            if (sec) sec.classList.remove('drag-over');
+          });
+          card.addEventListener('drop', function(e) {
+            e.preventDefault();
+            var sec = card.closest('.rangement-section');
+            if (sec) sec.classList.remove('drag-over');
+            var imagePath = e.dataTransfer.getData('text/plain');
+            if (!imagePath) return;
+            var fond = sec.getAttribute('data-fond');
+            mapping[imagePath] = fond;
+            render();
+          });
+        }
         return card;
       }
 
@@ -201,7 +199,7 @@
           if (players.length === 0) {
             var empty = document.createElement('p');
             empty.className = 'rangement-empty';
-            empty.textContent = 'Glisser des cartes ici.';
+            empty.textContent = RANGEMENT_VERROUILLE ? 'Aucune carte.' : 'Glisser des cartes ici.';
             grid.appendChild(empty);
           } else {
             players.forEach(function(p) {
@@ -210,41 +208,45 @@
           }
           section.appendChild(grid);
 
-          section.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            section.classList.add('drag-over');
-          });
-          section.addEventListener('dragleave', function() {
-            section.classList.remove('drag-over');
-          });
-          section.addEventListener('drop', function(e) {
-            e.preventDefault();
-            section.classList.remove('drag-over');
-            var imagePath = e.dataTransfer.getData('text/plain');
-            if (!imagePath) return;
-            mapping[imagePath] = key;
-            render();
-          });
+          if (!RANGEMENT_VERROUILLE) {
+            section.addEventListener('dragover', function(e) {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = 'move';
+              section.classList.add('drag-over');
+            });
+            section.addEventListener('dragleave', function() {
+              section.classList.remove('drag-over');
+            });
+            section.addEventListener('drop', function(e) {
+              e.preventDefault();
+              section.classList.remove('drag-over');
+              var imagePath = e.dataTransfer.getData('text/plain');
+              if (!imagePath) return;
+              mapping[imagePath] = key;
+              render();
+            });
+          }
 
           root.appendChild(section);
         });
       }
 
-      document.getElementById('rangementSaveBtn').addEventListener('click', function() {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(mapping));
-          var fb = document.getElementById('rangementSaveFeedback');
-          if (fb) {
-            fb.textContent = 'Rangement enregistré.';
-            fb.style.display = 'block';
-            setTimeout(function() { fb.style.display = 'none'; }, 2500);
+      if (!RANGEMENT_VERROUILLE) {
+        document.getElementById('rangementSaveBtn').addEventListener('click', function() {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(mapping));
+            var fb = document.getElementById('rangementSaveFeedback');
+            if (fb) {
+              fb.textContent = 'Rangement enregistré.';
+              fb.style.display = 'block';
+              setTimeout(function() { fb.style.display = 'none'; }, 2500);
+            }
+          } catch (e) {
+            var fb = document.getElementById('rangementSaveFeedback');
+            if (fb) { fb.textContent = 'Erreur lors de l\'enregistrement.'; fb.style.display = 'block'; }
           }
-        } catch (e) {
-          var fb = document.getElementById('rangementSaveFeedback');
-          if (fb) { fb.textContent = 'Erreur lors de l\'enregistrement.'; fb.style.display = 'block'; }
-        }
-      });
+        });
+      }
 
       render();
     })();

@@ -39,6 +39,7 @@
       if (!list) return;
       var root = document.getElementById('monumentCollectionRoot');
       if (!root) return;
+      var placeholderBase = 'https://placehold.co/200x120/1a1a2e/f0c14b?text=';
       list.forEach(function(m) {
         var card = document.createElement('div');
         card.className = 'monument-card';
@@ -46,6 +47,10 @@
         img.src = m.image;
         img.alt = m.name;
         img.loading = 'lazy';
+        img.onerror = function() {
+          this.onerror = null;
+          this.src = placeholderBase + encodeURIComponent(m.name);
+        };
         card.appendChild(img);
         var nameEl = document.createElement('p');
         nameEl.className = 'monument-card-name';
@@ -55,7 +60,7 @@
       });
       var badge = document.getElementById('boutiqueStarcoinBadge');
       if (badge && typeof localStorage !== 'undefined') {
-        var starcoins = parseInt(localStorage.getItem('starcoins') || '0', 10);
+        var starcoins = parseInt(localStorage.getItem('clement-starcoin') || localStorage.getItem('starcoins') || '0', 10);
         badge.textContent = '\uD83D\uDC8E ' + starcoins.toLocaleString('fr-FR');
       }
     })();

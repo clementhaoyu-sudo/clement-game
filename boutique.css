@@ -111,6 +111,14 @@ a.boutique-option:hover {
   margin-bottom: 1.5rem;
 }
 
+.boutique-category-subtitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f0c14b;
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
 /* Grille des packs (Joueur de foot) */
 .boutique-packs {
   display: grid;

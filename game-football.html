@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Football - Ultimate Challenge</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="game-football.css">
+</head>
+<body class="game-football-page">
+  <a href="pintro.html" class="game-foot-back">← Retour</a>
+
+  <div id="gameSetup" class="game-setup">
+    <div class="game-setup-box">
+      <h1 class="game-setup-title">⚽ Game Football</h1>
+      <p class="game-setup-desc">Joue un match avec tes <strong>5 joueurs clés</strong> de Ma composition.</p>
+      <div id="gameSetupPlayers" class="game-setup-players"></div>
+      <p id="gameSetupError" class="game-setup-error" style="display: none;">Complète tes 5 cartes clés sur <a href="macompo.html">Ma composition</a> pour jouer.</p>
+      <button type="button" class="game-setup-btn" id="gameStartBtn" disabled>Lancer le match</button>
+    </div>
+  </div>
+
+  <div id="gameMatch" class="game-match" aria-hidden="true">
+    <div class="game-stadium">
+      <div class="game-pitch">
+        <div class="game-pitch-line game-pitch-center"></div>
+        <div class="game-pitch-circle"></div>
+        <div class="game-pitch-box game-pitch-box-top"></div>
+        <div class="game-pitch-box game-pitch-box-bottom"></div>
+      </div>
+    </div>
+    <div class="game-scoreboard">
+      <div class="game-scoreboard-team game-scoreboard-you">
+        <span class="game-scoreboard-name">Ma composition</span>
+        <span class="game-scoreboard-score" id="scoreYou">0</span>
+      </div>
+      <div class="game-scoreboard-minute">
+        <span id="gameMinute">0'</span>
+      </div>
+      <div class="game-scoreboard-team game-scoreboard-cpu">
+        <span class="game-scoreboard-score" id="scoreCpu">0</span>
+        <span class="game-scoreboard-name">Adversaire</span>
+      </div>
+    </div>
+    <div class="game-lineup" id="gameLineup"></div>
+    <div class="game-events" id="gameEvents"></div>
+    <div class="game-minute-bar">
+      <div class="game-minute-bar-fill" id="gameMinuteBar"></div>
+    </div>
+  </div>
+
+  <div id="gameResult" class="game-result" aria-hidden="true">
+    <div class="game-result-box">
+      <h2 id="gameResultTitle" class="game-result-title">Victoire</h2>
+      <p class="game-result-score" id="gameResultScore">3 - 1</p>
+      <p class="game-result-desc" id="gameResultDesc">Bravo à tes 5 joueurs clés.</p>
+      <div class="game-result-scorers" id="gameResultScorers"></div>
+      <a href="pintro.html" class="game-result-btn">Retour</a>
+      <button type="button" class="game-result-btn game-result-btn-secondary" id="gameReplayBtn">Rejouer</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var KEY = 'clement-macompo';
+      var KEY_CLES = 'clement-macompo-cles';
+
+      function getKeyPlayers() {
+        var raw = localStorage.getItem(KEY);
+        var list = [];
+        try { if (raw) list = JSON.parse(raw); } catch (e) {}
+        if (!Array.isArray(list)) list = [];
+        var rawCles = localStorage.getItem(KEY_CLES);
+        var cles = [];
+        try {
+          if (rawCles) {
+            var parsed = JSON.parse(rawCles);
+            if (Array.isArray(parsed)) {
+              for (var i = 0; i < Math.min(5, parsed.length); i++) {
+                var v = parsed[i];
+                if (typeof v === 'number' && v >= 0 && v < list.length) {
+                  cles.push(list[v]);
+                } else if (v && typeof v === 'object' && v.image) {
+                  cles.push(v);
+                }
+              }
+            }
+          }
+        } catch (e) {}
+        return cles;
+      }
+
+      var players = getKeyPlayers();
+      var setupEl = document.getElementById('gameSetup');
+      var setupPlayersEl = document.getElementById('gameSetupPlayers');
+      var setupErrorEl = document.getElementById('gameSetupError');
+      var startBtn = document.getElementById('gameStartBtn');
+      var matchEl = document.getElementById('gameMatch');
+      var resultEl = document.getElementById('gameResult');
+
+      if (setupPlayersEl) {
+        if (players.length >= 5) {
+          players.slice(0, 5).forEach(function(p) {
+            var card = document.createElement('div');
+            card.className = 'game-setup-card';
+            var img = document.createElement('img');
+            img.src = p.image || '';
+            img.alt = p.name || '';
+            card.appendChild(img);
+            var name = document.createElement('span');
+            name.className = 'game-setup-card-name';
+            name.textContent = (p.name || '') + ' (' + (p.ovr != null ? p.ovr : '?') + ')';
+            card.appendChild(name);
+            setupPlayersEl.appendChild(card);
+          });
+          startBtn.disabled = false;
+        } else {
+          setupErrorEl.style.display = 'block';
+        }
+      }
+
+      startBtn.addEventListener('click', function() {
+        setupEl.setAttribute('aria-hidden', 'true');
+        setupEl.style.display = 'none';
+        matchEl.setAttribute('aria-hidden', 'false');
+        matchEl.style.display = 'block';
+        runMatch(players.slice(0, 5));
+      });
+
+      function renderLineup(plist) {
+        var lineup = document.getElementById('gameLineup');
+        if (!lineup) return;
+        lineup.innerHTML = '';
+        plist.forEach(function(p) {
+          var c = document.createElement('div');
+          c.className = 'game-lineup-card';
+          var img = document.createElement('img');
+          img.src = p.image || '';
+          img.alt = p.name || '';
+          c.appendChild(img);
+          var name = document.createElement('span');
+          name.className = 'game-lineup-card-name';
+          name.textContent = p.name || '';
+          c.appendChild(name);
+          lineup.appendChild(c);
+        });
+      }
+
+      function addEvent(text, isGoal, scorer) {
+        var ev = document.getElementById('gameEvents');
+        if (!ev) return;
+        var div = document.createElement('div');
+        div.className = 'game-event' + (isGoal ? ' game-event-goal' : '');
+        if (isGoal && scorer) {
+          var card = document.createElement('div');
+          card.className = 'game-event-scorer';
+          var img = document.createElement('img');
+          img.src = scorer.image || '';
+          img.alt = scorer.name || '';
+          card.appendChild(img);
+          card.appendChild(document.createTextNode(scorer.name || ''));
+          div.appendChild(card);
+        }
+        div.appendChild(document.createTextNode(text));
+        ev.appendChild(div);
+        ev.scrollTop = ev.scrollHeight;
+      }
+
+      function runMatch(plist) {
+        renderLineup(plist);
+        var scoreYou = 0, scoreCpu = 0;
+        var scorersYou = [];
+        var durationMs = 42000;
+        var interval = 150;
+        var minute = 0;
+        var maxMinute = 90;
+        var scoreYouEl = document.getElementById('scoreYou');
+        var scoreCpuEl = document.getElementById('scoreCpu');
+        var minuteEl = document.getElementById('gameMinute');
+        var barEl = document.getElementById('gameMinuteBar');
+        var eventsEl = document.getElementById('gameEvents');
+        if (eventsEl) eventsEl.innerHTML = '';
+
+        function updateUI() {
+          if (scoreYouEl) scoreYouEl.textContent = scoreYou;
+          if (scoreCpuEl) scoreCpuEl.textContent = scoreCpu;
+          if (minuteEl) minuteEl.textContent = minute + "'";
+          if (barEl) barEl.style.width = (minute / maxMinute * 100) + '%';
+        }
+
+        var numGoals = 2 + Math.floor(Math.random() * 4);
+        var goals = [];
+        for (var g = 0; g < numGoals; g++) {
+          goals.push({ min: Math.floor(8 + Math.random() * 75), side: Math.random() < 0.52 ? 'you' : 'cpu' });
+        }
+        goals.sort(function(a, b) { return a.min - b.min; });
+
+        var goalIndex = 0;
+        var startTime = Date.now();
+
+        function tick() {
+          var elapsed = Date.now() - startTime;
+          minute = Math.min(maxMinute, Math.floor((elapsed / durationMs) * maxMinute));
+          updateUI();
+
+          while (goalIndex < goals.length && goals[goalIndex].min <= minute) {
+            var go = goals[goalIndex];
+            if (go.side === 'you') {
+              scoreYou++;
+              var scorer = plist[Math.floor(Math.random() * plist.length)];
+              scorersYou.push(scorer);
+              addEvent(go.min + "' BUT ! " + (scorer.name || '') + " ", true, scorer);
+            } else {
+              scoreCpu++;
+              addEvent(go.min + "' But adversaire.", true, null);
+            }
+            goalIndex++;
+          }
+
+          if (minute >= maxMinute) {
+            endMatch(scoreYou, scoreCpu, scorersYou, plist);
+            return;
+          }
+          setTimeout(tick, interval);
+        }
+        tick();
+      }
+
+      function endMatch(scoreYou, scoreCpu, scorersYou, plist) {
+        matchEl.setAttribute('aria-hidden', 'true');
+        matchEl.style.display = 'none';
+        resultEl.setAttribute('aria-hidden', 'false');
+        resultEl.style.display = 'flex';
+
+        var titleEl = document.getElementById('gameResultTitle');
+        var scoreEl = document.getElementById('gameResultScore');
+        var descEl = document.getElementById('gameResultDesc');
+        var scorersEl = document.getElementById('gameResultScorers');
+
+        if (scoreYou > scoreCpu) {
+          titleEl.textContent = 'Victoire';
+          titleEl.className = 'game-result-title game-result-victory';
+        } else if (scoreYou < scoreCpu) {
+          titleEl.textContent = 'Défaite';
+          titleEl.className = 'game-result-title game-result-defeat';
+        } else {
+          titleEl.textContent = 'Match nul';
+          titleEl.className = 'game-result-title game-result-draw';
+        }
+        scoreEl.textContent = scoreYou + ' - ' + scoreCpu;
+        descEl.textContent = scorersYou.length > 0 ? 'Tes buteurs :' : '';
+
+        if (scorersEl) {
+          scorersEl.innerHTML = '';
+          scorersYou.forEach(function(p) {
+            var d = document.createElement('div');
+            d.className = 'game-result-scorer';
+            var img = document.createElement('img');
+            img.src = p.image || '';
+            img.alt = p.name || '';
+            d.appendChild(img);
+            d.appendChild(document.createTextNode((p.name || '') + ' (' + (p.ovr != null ? p.ovr : '?') + ')'));
+            scorersEl.appendChild(d);
+          });
+        }
+      }
+
+      document.getElementById('gameReplayBtn').addEventListener('click', function() {
+        resultEl.setAttribute('aria-hidden', 'true');
+        resultEl.style.display = 'none';
+        setupEl.style.display = 'block';
+        setupEl.setAttribute('aria-hidden', 'false');
+      });
+    })();
+  </script>
+</body>
+</html>
